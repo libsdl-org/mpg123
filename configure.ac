@@ -1675,7 +1675,10 @@ output_modules=
 check_forced=no
 check_failed=no
 if test "x$with_audio" != "x"; then
-	check_modules="`echo $with_audio|tr , ' '` dummy"
+	check_modules=`echo $with_audio|tr , ' '`
+	if ! echo "$check_modules" | grep -qw dummy; then
+		check_modules="$check_modules dummy"
+	fi
 	echo "Limiting outputs to build according to your preference: $check_modules"
 	check_forced=yes
 fi
@@ -2186,6 +2189,15 @@ fi
 
 default_output_module=`first_word $default_output_modules`
 
+# Without actual modules, there is only the builtin one.
+if test x"$modules" = xdisabled; then
+  # Module-less build needs _some_ default module.
+  if test -z "$default_output_module"; then
+    default_output_module=dummy
+  fi
+  default_output_modules=$default_output_module
+fi
+
 # Setup the static build.
 # The conditionals always need to be defined by configure, even if
 # HAVE_MODULES is FALSE!
@@ -2222,10 +2234,6 @@ AM_CONDITIONAL([BUILD_SGI], [ test "sgi" = $default_output_module ])
 AM_CONDITIONAL([BUILD_MINT], [ test "mint" = $default_output_module ])
 AM_CONDITIONAL([BUILD_OPENAL], [ test "openal" = $default_output_module ])
 
-# Without actual modules, there is only the builtin one.
-if test x"$modules" = xdisabled; then
-  default_output_modules=$default_output_module
-fi
 default_modstring=`echo "$default_output_modules"|tr ' ' ,`
 AC_DEFINE_UNQUOTED( DEFAULT_OUTPUT_MODULE, "$default_modstring", [The default audio output module(s) to use] )
 
