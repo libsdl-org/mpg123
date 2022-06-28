@@ -7,32 +7,19 @@
 */
 
 #include "mpg123app.h"
-
-#ifdef HAVE_TERMIOS
-
-#include <termios.h>
 #include <ctype.h>
 
 #include "term.h"
+#include "terms.h"
 #include "common.h"
 #include "playlist.h"
 #include "metaprint.h"
 #include "debug.h"
 
 static int term_enable = 0;
-// We can work with the terminal either via stdin or stderr.
-// It can be that only one side is hooked to an interactive terminal.
-// You should be able to pipe terminal control commands (for testing)
-// and still have proper display.
-static int term_fd = -1;
-static struct termios old_tio;
 int seeking = FALSE;
 
 extern out123_handle *ao;
-
-/* Buffered key from a signal or whatnot.
-   We ignore the null character... */
-static char prekey = 0;
 
 /* Hm, next step would be some system in this, plus configurability...
    Two keys for everything? It's just stop/pause for now... */
@@ -66,49 +53,15 @@ struct keydef term_help[] =
 	,{ MPG123_BOOKMARK_KEY, 0, "print out current position in playlist and track, for the benefit of some external tool to store bookmarks" }
 	,{ MPG123_HELP_KEY,     0, "this help" }
 	,{ MPG123_QUIT_KEY,     0, "quit" }
+	,{ MPG123_EQ_RESET_KEY,    0, "reset to a flat equalizer" }
+	,{ MPG123_EQ_SHOW_KEY,     0, "show our current rough equalizer settings" }
+	,{ MPG123_BASS_UP_KEY,     0, "more bass" }
+	,{ MPG123_BASS_DOWN_KEY,   0, "less bass" }
+	,{ MPG123_MID_UP_KEY,      0, "more mids" }
+	,{ MPG123_MID_DOWN_KEY,    0, "less mids" }
+	,{ MPG123_TREBLE_UP_KEY,   0, "more treble" }
+	,{ MPG123_TREBLE_DOWN_KEY, 0, "less treble" }
 };
-
-void term_sigcont(int sig);
-static void term_sigusr(int sig);
-
-/* This must call only functions safe inside a signal handler. */
-int term_setup(struct termios *pattern)
-{
-	mdebug("setup on fd %d", term_fd);
-	struct termios tio = *pattern;
-
-	/* One might want to use sigaction instead. */
-	signal(SIGCONT, term_sigcont);
-	signal(SIGUSR1, term_sigusr);
-	signal(SIGUSR2, term_sigusr);
-
-	tio.c_lflag &= ~(ICANON|ECHO); 
-	tio.c_cc[VMIN] = 1;
-	tio.c_cc[VTIME] = 0;
-	return tcsetattr(term_fd,TCSANOW,&tio);
-}
-
-void term_sigcont(int sig)
-{
-	term_enable = 0;
-
-	if (term_setup(&old_tio) < 0)
-	{
-		fprintf(stderr,"Can't set terminal attributes\n");
-		return;
-	}
-
-	term_enable = 1;
-}
-
-static void term_sigusr(int sig)
-{
-	switch(sig)
-	{
-		case SIGUSR1: prekey=*param.term_usr1; break;
-		case SIGUSR2: prekey=*param.term_usr2; break;
-	}
-}
 
 /* initialze terminal */
 void term_init(void)
@@ -124,19 +77,15 @@ void term_init(void)
 		return;
 
 	term_enable = 0;
-
-	if( tcgetattr(term_fd=STDERR_FILENO,&old_tio) < 0
-		&& tcgetattr(term_fd=STDIN_FILENO,&old_tio) < 0 )
+	errno = 0;
+	if(term_setup() < 0)
 	{
-		fprintf(stderr,"Can't get terminal attributes\n");
+		if(errno)
+			merror("failed to set up terminal: %s", strerror(errno));
+		else
+			error("failed to set up terminal");
 		return;
 	}
-	if(term_setup(&old_tio) < 0)
-	{
-		fprintf(stderr,"Can't set terminal attributes\n");
-		return;
-	}
-
 	term_enable = 1;
 }
 
@@ -255,41 +204,10 @@ static void seekmode(mpg123_handle *mh, out123_handle *ao)
 	}
 }
 
-/* Get the next pressed key, if any.
-   Returns 1 when there is a key, 0 if not. */
-static int get_key(int do_delay, char *val)
-{
-	fd_set r;
-	struct timeval t;
-
-	/* Shortcut: If some other means sent a key, use it. */
-	if(prekey)
-	{
-		debug1("Got prekey: %c\n", prekey);
-		*val = prekey;
-		prekey = 0;
-		return 1;
-	}
-
-	t.tv_sec=0;
-	t.tv_usec=(do_delay) ? 10*1000 : 0;
-
-	FD_ZERO(&r);
-	FD_SET(STDIN_FILENO,&r);
-	if(select(1,&r,NULL,NULL,&t) > 0 && FD_ISSET(0,&r))
-	{
-		if(read(STDIN_FILENO,val,1) <= 0)
-		return 0; /* Well, we couldn't read the key, so there is none. */
-		else
-		return 1;
-	}
-	else return 0;
-}
-
 static void term_handle_key(mpg123_handle *fr, out123_handle *ao, char val)
 {
 	debug1("term_handle_key: %c", val);
-	switch(tolower(val))
+	switch(val)
 	{
 	case MPG123_BACK_KEY:
 		out123_pause(ao);
@@ -314,7 +232,9 @@ static void term_handle_key(mpg123_handle *fr, out123_handle *ao, char val)
 	case MPG123_QUIT_KEY:
 		debug("QUIT");
 		if(stopped)
-		{
+		{		if(param.verbose)
+			print_stat(fr,0,ao,0,&param);
+
 			stopped = 0;
 			out123_pause(ao); /* no chance for annoying underrun warnings */
 			out123_drop(ao);
@@ -389,13 +309,47 @@ static void term_handle_key(mpg123_handle *fr, out123_handle *ao, char val)
 		offset+=50;
 	break;
 	case MPG123_VOL_UP_KEY:
-		mpg123_volume_change(fr, 0.02);
+		mpg123_volume_change_db(fr, +1);
 	break;
 	case MPG123_VOL_DOWN_KEY:
-		mpg123_volume_change(fr, -0.02);
+		mpg123_volume_change_db(fr, -1);
 	break;
 	case MPG123_VOL_MUTE_KEY:
 		set_mute(ao, muted=!muted);
+	break;
+	case MPG123_EQ_RESET_KEY:
+		mpg123_reset_eq(fr);
+	break;
+	case MPG123_EQ_SHOW_KEY:
+	{
+		if(param.verbose)
+			print_stat(fr,0,ao,0,&param);
+		// Assuming only changes happen via terminal control, these 3 values
+		// are what counts.
+		fprintf( stderr, "\n\nbass:   %.3f\nmid:    %.3f\ntreble: %.3f\n\n"
+		,	mpg123_geteq(fr, MPG123_LEFT, 0)
+		,	mpg123_geteq(fr, MPG123_LEFT, 1)
+		,	mpg123_geteq(fr, MPG123_LEFT, 2)
+		);
+	}
+	break;
+	case MPG123_BASS_UP_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 0, 0, +1);
+	break;
+	case MPG123_BASS_DOWN_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 0, 0, -1);
+	break;
+	case MPG123_MID_UP_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 1, 1, +1);
+	break;
+	case MPG123_MID_DOWN_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 1, 1, -1);
+	break;
+	case MPG123_TREBLE_UP_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 2, 31, +1);
+	break;
+	case MPG123_TREBLE_DOWN_KEY:
+		mpg123_eq_change(fr, MPG123_LR, 2, 31, -1);
 	break;
 	case MPG123_PITCH_UP_KEY:
 	case MPG123_PITCH_BUP_KEY:
@@ -460,7 +414,6 @@ static void term_handle_key(mpg123_handle *fr, out123_handle *ao, char val)
 			print_stat(fr,0,ao,0,&param);
 		fprintf(stderr, "%s\n", param.verbose ? "\n" : "");
 		print_id3_tag(fr, param.long_id3, stderr, term_width(STDERR_FILENO));
-		fprintf(stderr, "\n");
 	break;
 	case MPG123_MPEG_KEY:
 		if(param.verbose)
@@ -555,7 +508,7 @@ static void term_handle_input(mpg123_handle *fr, out123_handle *ao, int do_delay
 {
 	char val;
 	/* Do we really want that while loop? This means possibly handling multiple inputs that come very rapidly in one go. */
-	while(get_key(do_delay, &val))
+	while(term_get_key(do_delay, &val))
 	{
 		term_handle_key(fr, ao, val);
 	}
@@ -571,9 +524,5 @@ void term_exit(void)
 
 	if(!term_enable) return;
 
-	debug("reset attrbutes");
-	tcsetattr(term_fd,TCSAFLUSH,&old_tio);
+	term_restore();
 }
-
-#endif
-

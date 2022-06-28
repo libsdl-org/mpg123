@@ -1,7 +1,7 @@
 /*
 	common: misc stuff... audio flush, status display...
 
-	copyright ?-2020 by the mpg123 project
+	copyright ?-2022 by the mpg123 project
 	free software under the terms of the LGPL 2.1
 
 	see COPYING and AUTHORS files in distribution or http://mpg123.org
@@ -15,6 +15,8 @@
 #include "out123.h"
 #include <sys/stat.h>
 #include "common.h"
+#include "terms.h"
+#include "metaprint.h"
 
 #include "debug.h"
 
@@ -166,6 +168,7 @@ void print_buf(const char* prefix, out123_handle *ao)
 void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 ,	struct parameter *param)
 {
+	static int old_term_width = -1;
 	size_t buffered;
 	off_t decoded;
 	off_t elapsed;
@@ -183,6 +186,7 @@ void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 	char linebuf[256];
 	char *line = NULL;
 
+#ifndef __OS2__
 #ifndef WIN32
 #ifndef GENERIC
 /* Only generate new stat line when stderr is ready... don't overfill... */
@@ -198,6 +202,7 @@ void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 		n = select(errfd+1,NULL,&serr,NULL,&t);
 		if(n <= 0) return;
 	}
+#endif
 #endif
 #endif
 	if(out123_getformat(ao, &rate, NULL, NULL, &framesize))
@@ -237,6 +242,22 @@ void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 		/* 255 is enough for the data I prepare, if there is no terminal width to
 		   fill */
 		maxlen  = term_width(STDERR_FILENO);
+		if(draw_bar && maxlen > 0 && maxlen < old_term_width)
+		{
+			// Hack about draw_bar: That's the normal print_stat that is not followed by
+			// metadata anyway. No need to double things.
+			print_stat(fr, offset, ao, 0, param);
+			if(param->verbose > 2)
+				fprintf(stderr,"Note: readjusting for smaller terminal (%d to %d)\n", old_term_width, maxlen);
+			fprintf(stderr, "\n\n\n");
+			if(param->verbose > 1)
+				print_header(fr);
+			else
+				print_header_compact(fr);
+			print_id3_tag(fr, param->long_id3, stderr, maxlen);
+		}
+		if(draw_bar)
+			old_term_width = maxlen;
 		linelen = maxlen > 0 ? maxlen : (sizeof(linebuf)-1);
 		line = linelen >= sizeof(linebuf)
 		?	malloc(linelen+1) /* Only malloc if it is a really long line. */
@@ -354,7 +375,6 @@ void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 			   Shouldn't we always fill to maxlen? */
 			if(maxlen > 0)
 				memset(line+len, ' ', linelen-len);
-#ifdef HAVE_TERMIOS
 			draw_bar = draw_bar && term_have_fun(STDERR_FILENO,param->term_visual);
 			/* Use inverse color to draw a progress bar. */
 			if(maxlen > 0 && draw_bar)
@@ -377,16 +397,8 @@ void print_stat(mpg123_handle *fr, long offset, out123_handle *ao, int draw_bar
 				fprintf(stderr, "%s", line+barlen);
 			}
 			else
-#endif
 			fprintf(stderr, "\r%s", line);
 		}
-	}
-	/* Check for changed tags here too? */
-	if( mpg123_meta_check(fr) & MPG123_NEW_ICY && MPG123_OK == mpg123_icy(fr, &icy) )
-	{
-		if(line) /* Clear the inverse video. */
-			fprintf(stderr, "\r%s", line);
-		fprintf(stderr, "\nICY-META: %s\n", icy);
 	}
 	if(line && line != linebuf)
 		free(line);

@@ -22,6 +22,8 @@
 #include "win32_support.h"
 #endif
 
+#include "streamdump.h"
+
 #if defined(WIN32) && defined(DYNAMIC_BUILD)
 #define LINK_MPG123_DLL
 #endif
@@ -41,6 +43,7 @@
 #define VERBOSE_MAX 3
 
 extern char* binpath; /* argv[0], actually... */
+extern int stdin_is_term;
 extern int stdout_is_term;
 extern int stderr_is_term;
 
@@ -57,13 +60,11 @@ struct parameter
 	const char* output_module;	/* audio output module to use */
 	const char* output_device;	/* audio output device to use */
 	long  output_flags;	/* out123 flags */
-#ifdef HAVE_TERMIOS
 	int term_ctrl;
 	int term_visual;
 	/* Those are supposed to be single characters. */
 	char* term_usr1;
 	char* term_usr2;
-#endif
 	int checkrange;
 	int force_reopen;
 	long realtime;
@@ -109,6 +110,12 @@ struct parameter
 	long icy_interval;
 	const char* name; /* name for this player instance */
 	double device_buffer; /* output device buffer */
+#if defined(NETWORK) || defined(NET123)
+	char *httpauth; /* HTTP auth data */
+#endif
+#if defined(NET123)
+	char *network_backend;
+#endif
 };
 
 enum mpg123app_flags
@@ -123,8 +130,7 @@ enum mpg123app_flags
 
 extern char *equalfile;
 extern off_t framenum;
-extern struct httpdata htd;
-
+extern struct stream *filept;
 extern int intflag;
 
 #ifdef VARMODESUPPORT

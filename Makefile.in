@@ -372,14 +372,23 @@ check_PROGRAMS = src/tests/decode_fixed$(EXEEXT) \
 
 @HAVE_MODULES_TRUE@am__append_96 = src/libout123/module.c
 @HAVE_MODULES_FALSE@am__append_97 = src/libout123/legacy_module.c
-@WIN32_CODES_TRUE@am__append_98 = \
-@WIN32_CODES_TRUE@  src/win32_support.c \
-@WIN32_CODES_TRUE@  src/win32_net.c
-
-@WIN32_CODES_TRUE@am__append_99 = \
+@TERM_POSIX_TRUE@am__append_98 = src/term_posix.c
+@TERM_WIN32_TRUE@am__append_99 = src/term_win32.c
+@TERM_NONE_TRUE@am__append_100 = src/term_none.c
+@NET123_EXEC_TRUE@am__append_101 = src/net123.h src/net123_exec.c
+@NET123_WINHTTP_TRUE@am__append_102 = src/net123.h src/net123_winhttp.c
+@NET123_WINHTTP_TRUE@am__append_103 = -lwinhttp
+@NET123_WININET_TRUE@am__append_104 = src/net123.h src/net123_wininet.c
+@NET123_WININET_TRUE@am__append_105 = -lwininet
+@WIN32_CODES_TRUE@am__append_106 = \
 @WIN32_CODES_TRUE@  src/win32_support.c
 
-@WIN32_CODES_TRUE@am__append_100 = \
+@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_107 = src/win32_net.c
+@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_108 = -lws2_32
+@WIN32_CODES_TRUE@am__append_109 = \
+@WIN32_CODES_TRUE@  src/win32_support.c
+
+@WIN32_CODES_TRUE@am__append_110 = \
 @WIN32_CODES_TRUE@  src/win32_support.c
 
 subdir = .
@@ -1112,10 +1121,18 @@ am__src_mpg123_SOURCES_DIST = src/audio.c src/audio.h src/common.c \
 	src/genre.c src/mpg123.c src/mpg123app.h src/metaprint.c \
 	src/metaprint.h src/local.h src/local.c src/playlist.c \
 	src/playlist.h src/streamdump.h src/streamdump.c src/term.c \
-	src/term.h src/win32_support.h src/win32_support.c \
-	src/win32_net.c
-@WIN32_CODES_TRUE@am__objects_70 = src/win32_support.$(OBJEXT) \
-@WIN32_CODES_TRUE@	src/win32_net.$(OBJEXT)
+	src/term.h src/terms.h src/win32_support.h src/term_posix.c \
+	src/term_win32.c src/term_none.c src/net123.h \
+	src/net123_exec.c src/net123_winhttp.c src/net123_wininet.c \
+	src/win32_support.c src/win32_net.c
+@TERM_POSIX_TRUE@am__objects_70 = src/term_posix.$(OBJEXT)
+@TERM_WIN32_TRUE@am__objects_71 = src/term_win32.$(OBJEXT)
+@TERM_NONE_TRUE@am__objects_72 = src/term_none.$(OBJEXT)
+@NET123_EXEC_TRUE@am__objects_73 = src/net123_exec.$(OBJEXT)
+@NET123_WINHTTP_TRUE@am__objects_74 = src/net123_winhttp.$(OBJEXT)
+@NET123_WININET_TRUE@am__objects_75 = src/net123_wininet.$(OBJEXT)
+@WIN32_CODES_TRUE@am__objects_76 = src/win32_support.$(OBJEXT)
+@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__objects_77 = src/win32_net.$(OBJEXT)
 am_src_mpg123_OBJECTS = src/audio.$(OBJEXT) src/common.$(OBJEXT) \
 	src/sysutil.$(OBJEXT) src/control_generic.$(OBJEXT) \
 	src/equalizer.$(OBJEXT) src/getlopt.$(OBJEXT) \
@@ -1123,19 +1140,22 @@ am_src_mpg123_OBJECTS = src/audio.$(OBJEXT) src/common.$(OBJEXT) \
 	src/genre.$(OBJEXT) src/mpg123.$(OBJEXT) \
 	src/metaprint.$(OBJEXT) src/local.$(OBJEXT) \
 	src/playlist.$(OBJEXT) src/streamdump.$(OBJEXT) \
-	src/term.$(OBJEXT) $(am__objects_70)
+	src/term.$(OBJEXT) $(am__objects_70) $(am__objects_71) \
+	$(am__objects_72) $(am__objects_73) $(am__objects_74) \
+	$(am__objects_75) $(am__objects_76) $(am__objects_77)
 src_mpg123_OBJECTS = $(am_src_mpg123_OBJECTS)
+am__DEPENDENCIES_1 =
 src_mpg123_DEPENDENCIES = src/compat/libcompat.la \
 	src/libmpg123/libmpg123.la src/libout123/libout123.la \
-	src/libsyn123/libsyn123.la
+	src/libsyn123/libsyn123.la $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 src_mpg123_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(src_mpg123_LDFLAGS) $(LDFLAGS) -o $@
 am__src_mpg123_id3dump_SOURCES_DIST = src/mpg123-id3dump.c \
 	src/getlopt.c src/getlopt.h src/win32_support.c
-@WIN32_CODES_TRUE@am__objects_71 = src/win32_support.$(OBJEXT)
 am_src_mpg123_id3dump_OBJECTS = src/mpg123-id3dump.$(OBJEXT) \
-	src/getlopt.$(OBJEXT) $(am__objects_71)
+	src/getlopt.$(OBJEXT) $(am__objects_76)
 src_mpg123_id3dump_OBJECTS = $(am_src_mpg123_id3dump_OBJECTS)
 src_mpg123_id3dump_DEPENDENCIES = src/compat/libcompat.la \
 	src/libmpg123/libmpg123.la
@@ -1150,7 +1170,7 @@ am__src_out123_SOURCES_DIST = src/sysutil.c src/sysutil.h src/common.h \
 	src/win32_support.h src/win32_support.c
 am_src_out123_OBJECTS = src/sysutil.$(OBJEXT) src/getlopt.$(OBJEXT) \
 	src/local.$(OBJEXT) src/filters.$(OBJEXT) src/out123.$(OBJEXT) \
-	$(am__objects_71)
+	$(am__objects_76)
 src_out123_OBJECTS = $(am_src_out123_OBJECTS)
 src_out123_DEPENDENCIES = src/compat/libcompat.la \
 	src/libsyn123/libsyn123.la src/libout123/libout123.la
@@ -1220,11 +1240,15 @@ am__depfiles_remade = src/$(DEPDIR)/audio.Po src/$(DEPDIR)/common.Po \
 	src/$(DEPDIR)/getlopt.Po src/$(DEPDIR)/httpget.Po \
 	src/$(DEPDIR)/local.Po src/$(DEPDIR)/metaprint.Po \
 	src/$(DEPDIR)/mpg123-id3dump.Po src/$(DEPDIR)/mpg123-strip.Po \
-	src/$(DEPDIR)/mpg123.Po src/$(DEPDIR)/out123.Po \
+	src/$(DEPDIR)/mpg123.Po src/$(DEPDIR)/net123_exec.Po \
+	src/$(DEPDIR)/net123_winhttp.Po \
+	src/$(DEPDIR)/net123_wininet.Po src/$(DEPDIR)/out123.Po \
 	src/$(DEPDIR)/playlist.Po src/$(DEPDIR)/resolver.Po \
 	src/$(DEPDIR)/streamdump.Po src/$(DEPDIR)/sysutil.Po \
-	src/$(DEPDIR)/term.Po src/$(DEPDIR)/win32_net.Po \
-	src/$(DEPDIR)/win32_support.Po src/compat/$(DEPDIR)/compat.Plo \
+	src/$(DEPDIR)/term.Po src/$(DEPDIR)/term_none.Po \
+	src/$(DEPDIR)/term_posix.Po src/$(DEPDIR)/term_win32.Po \
+	src/$(DEPDIR)/win32_net.Po src/$(DEPDIR)/win32_support.Po \
+	src/compat/$(DEPDIR)/compat.Plo \
 	src/compat/$(DEPDIR)/compat_dl.Plo \
 	src/compat/$(DEPDIR)/compat_str.Plo \
 	src/libmpg123/$(DEPDIR)/calctables.Po \
@@ -2001,12 +2025,12 @@ EXTRA_DIST = src/tests/testtext.sh src/tests/decode_fixed.sh \
 	doc/ROAD_TO_LGPL doc/TODO doc/LICENSE doc/THANKS doc/ACCURACY \
 	doc/LARGEFILE doc/libmpg123_speed.txt doc/doxyhead.xhtml \
 	doc/doxyfoot.xhtml doc/doxy_examples.c doc/doxygen.conf \
-	doc/examples/mpg123_to_out123.c doc/examples/scan.c \
-	doc/examples/mpglib.c doc/examples/id3dump.c \
-	doc/examples/feedseek.c doc/examples/dump_seekindex.c \
-	doc/examples/extract_frames.c doc/examples/Makefile \
-	mpg123.spec makedll.sh windows-builds.sh equalize.dat \
-	NEWS.libmpg123 NEWS.libout123 NEWS.libsyn123 \
+	doc/windows-notes.html doc/examples/mpg123_to_out123.c \
+	doc/examples/scan.c doc/examples/mpglib.c \
+	doc/examples/id3dump.c doc/examples/feedseek.c \
+	doc/examples/dump_seekindex.c doc/examples/extract_frames.c \
+	doc/examples/Makefile mpg123.spec makedll.sh windows-builds.sh \
+	equalize.dat NEWS.libmpg123 NEWS.libout123 NEWS.libsyn123 \
 	ports/cmake/CMakeLists.txt ports/cmake/mpg123-config.cmake.in \
 	ports/cmake/cmake/search_libs.cmake \
 	ports/cmake/cmake/read_api_version.cmake \
@@ -2854,13 +2878,10 @@ src_libsyn123_libsyn123_la_SOURCES = \
   src/libsyn123/filter.c \
   src/libsyn123/sampleconv.c
 
-src_mpg123_LDADD = \
-  src/compat/libcompat.la \
-  src/libmpg123/libmpg123.la \
-  src/libout123/libout123.la \
-  src/libsyn123/libsyn123.la \
-  @PROG_LIBS@
-
+src_mpg123_LDADD = src/compat/libcompat.la src/libmpg123/libmpg123.la \
+	src/libout123/libout123.la src/libsyn123/libsyn123.la \
+	@PROG_LIBS@ $(am__append_103) $(am__append_105) \
+	$(am__append_108)
 src_mpg123_LDFLAGS = @EXEC_LT_LDFLAGS@
 src_out123_LDADD = \
   src/compat/libcompat.la \
@@ -2888,15 +2909,18 @@ src_mpg123_SOURCES = src/audio.c src/audio.h src/common.c src/common.h \
 	src/genre.c src/mpg123.c src/mpg123app.h src/metaprint.c \
 	src/metaprint.h src/local.h src/local.c src/playlist.c \
 	src/playlist.h src/streamdump.h src/streamdump.c src/term.c \
-	src/term.h src/win32_support.h $(am__append_98)
+	src/term.h src/terms.h src/win32_support.h $(am__append_98) \
+	$(am__append_99) $(am__append_100) $(am__append_101) \
+	$(am__append_102) $(am__append_104) $(am__append_106) \
+	$(am__append_107)
 
 # Replace common.h by sysutil.h!
 src_out123_SOURCES = src/sysutil.c src/sysutil.h src/common.h \
 	src/getlopt.c src/getlopt.h src/local.h src/local.c \
 	src/filters.h src/filters.c src/out123.c src/mpg123app.h \
-	src/win32_support.h $(am__append_99)
+	src/win32_support.h $(am__append_109)
 src_mpg123_id3dump_SOURCES = src/mpg123-id3dump.c src/getlopt.c \
-	src/getlopt.h $(am__append_100)
+	src/getlopt.h $(am__append_110)
 src_mpg123_strip_SOURCES = \
   src/mpg123-strip.c \
   src/getlopt.c \
@@ -3689,6 +3713,18 @@ src/playlist.$(OBJEXT): src/$(am__dirstamp) \
 src/streamdump.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/term.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/term_posix.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/term_win32.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/term_none.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/net123_exec.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/net123_winhttp.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/net123_wininet.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/win32_support.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/win32_net.$(OBJEXT): src/$(am__dirstamp) \
@@ -3815,12 +3851,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mpg123-id3dump.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mpg123-strip.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mpg123.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/net123_exec.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/net123_winhttp.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/net123_wininet.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/out123.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/playlist.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/resolver.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/streamdump.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/sysutil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/term.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/term_none.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/term_posix.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/term_win32.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/win32_net.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/win32_support.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/compat/$(DEPDIR)/compat.Plo@am__quote@ # am--include-marker
@@ -5342,12 +5384,18 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/mpg123-id3dump.Po
 	-rm -f src/$(DEPDIR)/mpg123-strip.Po
 	-rm -f src/$(DEPDIR)/mpg123.Po
+	-rm -f src/$(DEPDIR)/net123_exec.Po
+	-rm -f src/$(DEPDIR)/net123_winhttp.Po
+	-rm -f src/$(DEPDIR)/net123_wininet.Po
 	-rm -f src/$(DEPDIR)/out123.Po
 	-rm -f src/$(DEPDIR)/playlist.Po
 	-rm -f src/$(DEPDIR)/resolver.Po
 	-rm -f src/$(DEPDIR)/streamdump.Po
 	-rm -f src/$(DEPDIR)/sysutil.Po
 	-rm -f src/$(DEPDIR)/term.Po
+	-rm -f src/$(DEPDIR)/term_none.Po
+	-rm -f src/$(DEPDIR)/term_posix.Po
+	-rm -f src/$(DEPDIR)/term_win32.Po
 	-rm -f src/$(DEPDIR)/win32_net.Po
 	-rm -f src/$(DEPDIR)/win32_support.Po
 	-rm -f src/compat/$(DEPDIR)/compat.Plo
@@ -5590,12 +5638,18 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/mpg123-id3dump.Po
 	-rm -f src/$(DEPDIR)/mpg123-strip.Po
 	-rm -f src/$(DEPDIR)/mpg123.Po
+	-rm -f src/$(DEPDIR)/net123_exec.Po
+	-rm -f src/$(DEPDIR)/net123_winhttp.Po
+	-rm -f src/$(DEPDIR)/net123_wininet.Po
 	-rm -f src/$(DEPDIR)/out123.Po
 	-rm -f src/$(DEPDIR)/playlist.Po
 	-rm -f src/$(DEPDIR)/resolver.Po
 	-rm -f src/$(DEPDIR)/streamdump.Po
 	-rm -f src/$(DEPDIR)/sysutil.Po
 	-rm -f src/$(DEPDIR)/term.Po
+	-rm -f src/$(DEPDIR)/term_none.Po
+	-rm -f src/$(DEPDIR)/term_posix.Po
+	-rm -f src/$(DEPDIR)/term_win32.Po
 	-rm -f src/$(DEPDIR)/win32_net.Po
 	-rm -f src/$(DEPDIR)/win32_support.Po
 	-rm -f src/compat/$(DEPDIR)/compat.Plo

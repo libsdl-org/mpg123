@@ -82,6 +82,9 @@
 /* Define to 1 if you have the <CoreServices/CoreServices.h> header file. */
 #undef HAVE_CORESERVICES_CORESERVICES_H
 
+/* Define to 1 if you have the `ctermid' function. */
+#undef HAVE_CTERMID
+
 /* Define to 1 if you have the <CUlib.h> header file. */
 #undef HAVE_CULIB_H
 
@@ -99,6 +102,12 @@
 
 /* Define to 1 if you have the `dlsym' function. */
 #undef HAVE_DLSYM
+
+/* Define to 1 if you have the `execvp' function. */
+#undef HAVE_EXECVP
+
+/* Define to 1 if you have the `fork' function. */
+#undef HAVE_FORK
 
 /* Define to 1 if you have the `getaddrinfo' function. */
 #undef HAVE_GETADDRINFO
@@ -180,6 +189,9 @@
 
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
+
+/* for Win/DOS system with setmode() */
+#undef HAVE_SETMODE
 
 /* Define to 1 if you have the `setpriority' function. */
 #undef HAVE_SETPRIORITY
@@ -295,6 +307,9 @@
 /* Define to 1 if you have the <ws2tcpip.h> header file. */
 #undef HAVE_WS2TCPIP_H
 
+/* for Win/DOS system with _setmode() */
+#undef HAVE__SETMODE
+
 /* Define to indicate that float storage follows IEEE754. */
 #undef IEEE_FLOAT
 
@@ -319,6 +334,9 @@
 
 /* Define to the shared archive member specification, say "(shr.o)". */
 #undef LT_SHARED_LIB_MEMBER
+
+/* Define to for new net123 network stack. */
+#undef NET123
 
 /* Define if network support is enabled. */
 #undef NETWORK

@@ -88,9 +88,6 @@ enum runmodes
 
 static int runmode = RUN_MAIN;
 
-int stdout_is_term = FALSE; // It's an interactive terminal.
-int stderr_is_term = FALSE; // It's an interactive terminal.
-
 static FILE* input = NULL;
 static char *encoding_name = NULL;
 static int  encoding = MPG123_ENC_SIGNED_16;
@@ -1466,9 +1463,7 @@ static void setup_processing(void)
 int main(int sys_argc, char ** sys_argv)
 {
 	int result;
-#if defined(WIN32)
-	_setmode(STDIN_FILENO,  _O_BINARY);
-#endif
+	compat_binmode(STDIN_FILENO, TRUE);
 	check_locale();
 
 #if defined (WANT_WIN32_UNICODE)
@@ -1509,12 +1504,10 @@ int main(int sys_argc, char ** sys_argv)
 		out123_del(paro);
 	}
 
-#ifdef OS2
+#ifdef __OS2__
         _wildcard(&argc,&argv);
 #endif
 
-	stderr_is_term = term_width(STDERR_FILENO) >= 0;
-	stdout_is_term = term_width(STDOUT_FILENO) >= 0;
 	while ((result = getlopt(argc, argv, opts)))
 	switch (result) {
 		case GLO_UNKNOWN:
