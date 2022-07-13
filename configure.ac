@@ -9,7 +9,7 @@ dnl 2.69 at least.
 AC_PREREQ([2.69])
 
 dnl ############# Initialisation
-AC_INIT([mpg123], [1.30.0], [maintainer@mpg123.org])
+AC_INIT([mpg123], [1.30.1], [maintainer@mpg123.org])
 dnl Increment API_VERSION when the API gets changes (new functions).
 
 dnl libmpg123
@@ -2619,7 +2619,7 @@ if test x$network_type = xauto; then
   if test "x$have_fork" = "xyes"; then
     network_type=exec
   elif test "x$win32_specific_codes" = "xenabled"; then
-    network_type=winhttp
+    network_type=wininet
   elif test "x$have_network" = "xyes"; then
     network_type="internal"
   else

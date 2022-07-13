@@ -159,9 +159,11 @@ int stream_parse_headers(struct stream *sd)
 	int hn = sizeof(head)/sizeof(char*);
 	int hi = -1;
 	int got_ok = 0;
+	int got_line = 0;
 	debug("parsing headers");
 	while(stream_getline(sd, &line) > 0)
 	{
+		got_line = 1;
 		mdebug("HTTP in: %s", line.p);
 		if(line.p[0] == 0)
 		{
@@ -239,7 +241,11 @@ int stream_parse_headers(struct stream *sd)
 		if(param.verbose > 1)
 			fprintf(stderr, "Info: ICY interval %li\n", (long)sd->htd.icy_interval);
 	}
-	if(!got_ok)
+	if(!got_line)
+	{
+		error("no data at all from network resource");
+		ret = -1;
+	} else if(!got_ok)
 	{
 		error("missing positive server response");
 		ret = -1;
@@ -273,8 +279,6 @@ struct stream *stream_open(const char *url)
 		sd->fd = STDIN_FILENO;
 		compat_binmode(STDIN_FILENO, TRUE);
 	}
-	else if(!strncasecmp("file://", url, 7))
-		url+= 7; // use local file access for files, the scheme may be useful
 #ifdef NET123
 	else if(!strncasecmp("http://", url, 7) || !strncasecmp("https://", url, 8))
 	{
@@ -287,7 +291,7 @@ struct stream *stream_open(const char *url)
 		append_accept(&accept);
 		client_head[1] = accept.p;
 		sd->nh = net123_open(url, client_head);
-		if(stream_parse_headers(sd))
+		if(!sd->nh || stream_parse_headers(sd))
 		{
 			stream_close(sd);
 			return NULL;
@@ -311,11 +315,13 @@ struct stream *stream_open(const char *url)
 	else
 	{
 		// plain file access
+		if(!strncasecmp("file://", url, 7))
+			url+= 7; // Might be useful to prepend file scheme prefix for local stuff.
 		errno = 0;
 		sd->fd = compat_open(url, O_RDONLY|O_BINARY);
 		if(sd->fd < 0)
 		{
-			merror("failed to open file: %s", strerror(errno));
+			merror("failed to open file: %s: %s", url, strerror(errno));
 			stream_close(sd);
 			return NULL;
 		}
