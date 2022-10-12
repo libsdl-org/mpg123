@@ -38,6 +38,10 @@ else()
     message(WARNING "Unknown processor. Using generic optimizations.")
     set(MACHINE generic)
 endif()
+# avoid assembly when building an android x86 library: https://sourceforge.net/p/mpg123/bugs/345/
+if(ANDROID AND MACHINE STREQUAL "x86")
+    set(MACHINE "generic")
+endif()
 message(STATUS "Detected machine: ${MACHINE}")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/libmpg123/mpg123.h.in" mpg123.h)
