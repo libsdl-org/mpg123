@@ -8,6 +8,10 @@
 	initially written by Thomas Orgis
 */
 
+// ctermid
+#define _XOPEN_SOURCE 600
+#define _POSIX_C_SOURCE 200112L
+
 #include "config.h"
 
 #ifdef __OS2__
@@ -176,7 +180,7 @@ int term_setup(void)
 
 /* Get the next pressed key, if any.
    Returns 1 when there is a key, 0 if not. */
-int term_get_key(int do_delay, char *val)
+int term_get_key(int stopped, int do_delay, char *val)
 {
 #ifdef __OS2__
 	KBDKEYINFO key;
@@ -184,7 +188,7 @@ int term_get_key(int do_delay, char *val)
 	key.chScan = 0;
 	if(do_delay)
 		DosSleep(10);
-	if(!KbdCharIn(&key,IO_NOWAIT,0) && key.chChar)
+	if(!KbdCharIn(&key,(stopped) ? IO_WAIT : IO_NOWAIT,0) && key.chChar)
 	{
 		*val = key.chChar;
 		return 1;
@@ -207,7 +211,8 @@ int term_get_key(int do_delay, char *val)
 
 	FD_ZERO(&r);
 	FD_SET(term_fd,&r);
-	if(select(term_fd+1,&r,NULL,NULL,&t) > 0 && FD_ISSET(term_fd,&r))
+	/* No timeout if stopped */
+	if(select(term_fd+1,&r,NULL,NULL,(stopped) ? NULL : &t) > 0 && FD_ISSET(term_fd,&r))
 	{
 		if(read(term_fd,val,1) <= 0)
 		return 0; /* Well, we couldn't read the key, so there is none. */

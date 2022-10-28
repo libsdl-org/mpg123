@@ -187,6 +187,9 @@
 /* Define to 1 if you have the `sched_setscheduler' function. */
 #undef HAVE_SCHED_SETSCHEDULER
 
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
 
@@ -213,9 +216,6 @@
 
 /* Define to 1 if you have the <signal.h> header file. */
 #undef HAVE_SIGNAL_H
-
-/* Define to 1 if you have the <sndio.h> header file. */
-#undef HAVE_SNDIO_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -289,6 +289,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
+
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
 
@@ -300,6 +303,9 @@
 
 /* Define to 1 if you have the <wctype.h> header file. */
 #undef HAVE_WCTYPE_H
+
+/* Define to 1 if you have the <wincon.h> header file. */
+#undef HAVE_WINCON_H
 
 /* Define to 1 if you have the <windows.h> header file. */
 #undef HAVE_WINDOWS_H
@@ -337,6 +343,15 @@
 
 /* Define to for new net123 network stack. */
 #undef NET123
+
+/* Define for executable-based networking (for HTTPS). */
+#undef NET123_EXEC
+
+/* Define for winhttp networking (for HTTPS). */
+#undef NET123_WINHTTP
+
+/* Define for wininet networking (for HTTPS). */
+#undef NET123_WININET
 
 /* Define if network support is enabled. */
 #undef NETWORK

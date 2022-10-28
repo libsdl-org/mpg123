@@ -12,8 +12,6 @@
 #include "mpg123app.h"
 #include "audio.h"
 
-#define LOOP_CYCLES	0.500000	/* Loop time in sec */
-
 /* 
  * Defines the keybindings in term.c - change to your 
  * own preferences.
@@ -87,7 +85,7 @@
 #define MPG123_TERM_USR2 "f"
 
 
-void term_init(void);
+int term_init(void); // -1 on error, 0 success or no terminal desired
 void term_exit(void);
 off_t term_control(mpg123_handle *mh, out123_handle *ao);
 void term_hint(void); /* Print a message hinting at terminal usage. */

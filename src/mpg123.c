@@ -103,6 +103,7 @@ struct parameter param = {
 	,1024 /* resync_limit */
 	,0 /* smooth */
 	,0.0 /* pitch */
+	,0.5 // pauseloop
 	,0 /* appflags */
 	,NULL /* proxyurl */
 	,0 /* keep_open */
@@ -483,7 +484,7 @@ static void set_appflag(char *arg, topt *opts)
 #if defined(NETWORK) || defined(NET123)
 static void set_httpauth(char *arg, topt *opts)
 {
-	param.httpauth = strdup(arg);
+	param.httpauth = compat_strdup(arg);
 	// Do not advertise the password for all system users.
 	memset(arg, 'x', strlen(arg));
 }
@@ -717,6 +718,7 @@ topt opts[] = {
 	{'D', "delay", GLO_ARG | GLO_INT, 0, &param.delay, 0},
 	{0, "resync-limit", GLO_ARG | GLO_LONG, 0, &param.resync_limit, 0},
 	{0, "pitch", GLO_ARG|GLO_DOUBLE, 0, &param.pitch, 0},
+	{0, "pauseloop", GLO_ARG|GLO_DOUBLE, 0, &param.pauseloop, 0},
 #ifdef NETWORK
 	{0, "ignore-mime", GLO_LONG, set_appflag, &appflag, MPG123APP_IGNORE_MIME },
 #endif
@@ -1093,6 +1095,10 @@ int main(int sys_argc, char ** sys_argv)
 			print_outstr(stderr, prgName, 0, stderr_is_term);
 			fprintf(stderr, ": Missing argument for option \"%s\".\n", loptarg);
 			usage(1);
+		case GLO_BADARG:
+			print_outstr(stderr, prgName, 0, stderr_is_term);
+			fprintf(stderr, ": Bad option argument \"%s\".\n", loptarg);
+			usage(1);
 	}
 	/* Do this _after_ parameter parsing. */
 	utf8force = param.force_utf8;
@@ -1298,9 +1304,16 @@ int main(int sys_argc, char ** sys_argv)
 		ret = control_generic(mh);
 		safe_exit(ret);
 	}
-	if(param.term_ctrl == MAYBE)
-		param.term_ctrl = term_ctrl_default;
-	term_init();
+	{
+		int term_forced = param.term_ctrl == TRUE;
+		if(param.term_ctrl == MAYBE)
+			param.term_ctrl = term_ctrl_default;
+		if(term_init() && term_forced)
+		{
+			error("Aborting since explicitly requested terminal control is not available.");
+			safe_exit(99);
+		}
+	}
 	if(APPFLAG(MPG123APP_CONTINUE)) frames_left = param.frame_number;
 
 	while ((fname = get_next_file()))
@@ -1599,14 +1612,13 @@ static void long_usage(int err)
 	fprintf(o," -y     --no-resync        DISABLES resync on error (--resync is deprecated)\n");
 	fprintf(o," -F     --no-frankenstein  disable support for Frankenstein streams\n");
 #if defined(NETWORK) || defined(NET123)
-#ifdef NETWORK
-	fprintf(o," -p <f> --proxy <f>        set WWW proxy\n");
-#else
+	fprintf(o," -p <f> --proxy <f>        override proxy environemnt variable for plain HTTP\n");
 	fprintf(o,"        --network <b>      select network backend, available: auto");
 	const char **nb = net123_backends;
 	while(*nb){ fprintf(o, " %s", *nb++); }
 	fprintf(o, "\n");
-#endif
+	fprintf(o,"                           (auto meaning internal code for plain HTTP and the\n");
+	fprintf(o,"                           first external option for HTTPS)\n");
 	fprintf(o," -u     --auth             set auth values for HTTP access\n");
 	fprintf(o,"        --auth-file        set auth values for HTTP access from given file\n");
 	fprintf(o,"        --ignore-mime      ignore HTTP MIME types (content-type)\n");
@@ -1635,6 +1647,7 @@ static void long_usage(int err)
 	fprintf(o,"        --list-devices     list the available output devices for given output module\n");
 	fprintf(o," -a <d> --audiodevice <d>  select audio device (depending on chosen module)\n");
 	fprintf(o," -s     --stdout           write raw audio to stdout (host native format)\n");
+	fprintf(o," -O <f> --outfile <f>      write raw audio to given file (- is stdout)\n");
 	fprintf(o," -w <f> --wav <f>          write samples as WAV file in <f> (- is stdout)\n");
 	fprintf(o,"        --au <f>           write samples as Sun AU file in <f> (- is stdout)\n");
 	fprintf(o,"        --cdr <f>          write samples as raw CD audio file in <f> (- is stdout)\n");
@@ -1703,6 +1716,7 @@ static void long_usage(int err)
 	#ifndef GENERIC
 	fprintf(o,"        --title            set terminal title to filename\n");
 	#endif
+	fprintf(o,"        --pauseloop <s>    loop interval in (fractional) seconds\n");
 	fprintf(o,"        --name <n>         set instance name (used in various places)\n");
 	fprintf(o,"        --long-tag         spacy id3 display with every item on a separate line\n");
 	fprintf(o,"        --lyrics           show lyrics (from ID3v2 USLT frame)\n");

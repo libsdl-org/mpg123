@@ -361,49 +361,6 @@ out123_param_from(out123_handle *ao, out123_handle* from_ao)
 	return 0;
 }
 
-#ifndef NOXFERMEM
-/* Serialization of tunable parameters to communicate them between
-   main process and buffer. Make sure these two stay in sync ... */
-
-int write_parameters(out123_handle *ao, int who)
-{
-	int fd = ao->buffermem->fd[who];
-	if(
-		GOOD_WRITEVAL(fd, ao->flags)
-	&&	GOOD_WRITEVAL(fd, ao->preload)
-	&&	GOOD_WRITEVAL(fd, ao->gain)
-	&&	GOOD_WRITEVAL(fd, ao->device_buffer)
-	&&	GOOD_WRITEVAL(fd, ao->verbose)
-	&& !xfer_write_string(ao, who, ao->name)
-	&& !xfer_write_string(ao, who, ao->bindir)
-	)
-		return 0;
-	else
-		return -1;
-}
-
-int read_parameters(out123_handle *ao
-,	int who, byte *prebuf, int *preoff, int presize)
-{
-	int fd = ao->buffermem->fd[who];
-#define GOOD_READVAL_BUF(fd, val) \
-	!read_buf(fd, &val, sizeof(val), prebuf, preoff, presize)
-	if(
-		GOOD_READVAL_BUF(fd, ao->flags)
-	&&	GOOD_READVAL_BUF(fd, ao->preload)
-	&&	GOOD_READVAL_BUF(fd, ao->gain)
-	&&	GOOD_READVAL_BUF(fd, ao->device_buffer)
-	&&	GOOD_READVAL_BUF(fd, ao->verbose)
-	&& !xfer_read_string(ao, who, &ao->name)
-	&& !xfer_read_string(ao, who, &ao->bindir)
-	)
-		return 0;
-	else
-		return -1;
-#undef GOOD_READVAL_BUF
-}
-#endif
-
 int attribute_align_arg
 out123_open(out123_handle *ao, const char* driver, const char* device)
 {
@@ -730,8 +687,14 @@ out123_play(out123_handle *ao, void *bytes, size_t count)
 				sum   += written;
 				count -= written;
 			}
-			if(written < block && errno != EINTR)
-			{
+			if(written < block && errno != EINTR
+				&& errno != EAGAIN
+#if defined(EWOULDBLOCK) && (EWOULDBLOCK != EAGAIN)
+				// Not all platforms define it (or only in more modern POSIX modes).
+				// Standard says it is supposed to be a macro, so simple check here.
+				&& errno != EWOULDBLOCK
+#endif
+			){
 				ao->errcode = OUT123_DEV_PLAY;
 				if(!AOQUIET)
 					merror( "Error in writing audio, wrote only %d of %d (%s?)!"

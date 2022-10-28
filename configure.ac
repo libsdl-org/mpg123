@@ -9,7 +9,7 @@ dnl 2.69 at least.
 AC_PREREQ([2.69])
 
 dnl ############# Initialisation
-AC_INIT([mpg123], [1.30.2], [maintainer@mpg123.org])
+AC_INIT([mpg123], [1.31.0], [maintainer@mpg123.org])
 dnl Increment API_VERSION when the API gets changes (new functions).
 
 dnl libmpg123
@@ -18,7 +18,7 @@ LIB_PATCHLEVEL=0
 
 dnl libout123
 OUTAPI_VERSION=4
-OUTLIB_PATCHLEVEL=4
+OUTLIB_PATCHLEVEL=7
 
 dnl libsyn123
 SYNAPI_VERSION=1
@@ -1126,11 +1126,15 @@ dnl sensitive to largefile changes, i.e. FreeBSD always using 64 bit off_t.
 if test "x$ac_cv_sys_file_offset_bits" = x || echo "$ac_cv_sys_file_offset_bits" | $GREP  '@<:@^0-9@:>@' > /dev/null; then
 	dnl if it has non-numeric chars or is empty... ignore...
 	largefile_sensitive=no
+	BUILD_NO_LARGENAME=1
 else
 	largefile_sensitive=yes
+	BUILD_NO_LARGENAME=0
 fi
 # Add dual-mode wrapper code.
 AM_CONDITIONAL([HAVE_LFS_WRAP], [ test x"$largefile_sensitive" = xyes ] )
+# Any non-sensitive platform does not bother with off_t-based function renaming.
+AC_SUBST(BUILD_NO_LARGENAME)
 
 # Using the lower level macros instead of AC_TYPE_* for compatibility with not freshest autoconf.
 AC_CHECK_TYPE(size_t, unsigned long)
@@ -1209,16 +1213,29 @@ if test "x$have_mmap" = "xno"; then
   AC_CHECK_FUNCS([shmget shmat shmdt shmctl],[], [buffer=disabled])
 fi
 
-term_type=none
 # Check if system supports termios
 AC_SYS_POSIX_TERMIOS
+
+AC_MSG_CHECKING([if we have wincon.h])
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include <windows.h>
+#include <wincon.h>
+void *v = &ReadConsoleInput;
+])],[ac_cv_header_wincon_h=yes],[ac_cv_header_wincon_h=no])
+AC_MSG_RESULT([$ac_cv_header_wincon_h])
+AS_IF([test "x$ac_cv_header_wincon_h" = "xyes"],[],[AC_DEFINE([HAVE_WINCON_H],[1],[Define to 1 if you have the <wincon.h> header file.])])
+
+term_type=none
 if test "x$ac_cv_sys_posix_termios" = "xyes"; then
   AC_DEFINE_UNQUOTED([HAVE_TERMIOS], 1, 
   [Define this if you have the POSIX termios library])
   term_type=posix
+elif test "x$ac_cv_header_windows_h" = "xyes" &&
+     test "x$ac_cv_header_wincon_h"  = "xyes"; then
+  term_type=win32
 fi
 
-AC_CHECK_FUNCS( random )
+AC_CHECK_FUNCS( random setenv unsetenv )
 
 # Check for sched_setscheduler
 AC_CHECK_FUNCS( sched_setscheduler setuid getuid)
@@ -1291,13 +1308,6 @@ dnl OK, two lines... Solaris needs -lnsl -lsocket
 AC_SEARCH_LIBS(socket, socket) 
 
 AC_CHECK_FUNCS( getaddrinfo, [ have_ipv6=yes ], [ have_ipv6=no ] )
-
-# A Hack for MSVC builds by cmake: Disable largefile hackery.
-# Maybe one time we support hat wretched environment directly, but
-# for now configure lives in a world where large file support is
-# properly defined and served by off_t.
-BUILD_NO_LARGENAME=0
-AC_SUBST(BUILD_NO_LARGENAME)
 
 # Substitutions for the installable mpg123.h header
 if test "x$ac_cv_header_stdio_h" = "xyes"; then
@@ -1885,15 +1895,7 @@ int main(){
 			fi
 		;;
 		sndio)
-			SNDIO_LIBS=-lsndio
-			AC_CHECK_LIB([sndio], [sio_open],
-				[AC_CHECK_HEADERS([sndio.h],
-					[output_modules="$output_modules sndio" HAVE_SNDIO="yes"])
-				]
-			)
-			if test "x$HAVE_SNDIO" != xyes; then
-				check_failed=yes
-			fi
+			PKG_CHECK_MODULES(SNDIO, sndio, output_modules="$output_modules sndio" HAVE_SNDIO="yes", HAVE_SNDIO="no" check_failed=yes)
 		;;
 		sun)
 			AC_CHECK_HEADERS([sun/audioio.h sys/audioio.h asm/audioio.h sys/audio.h])
@@ -2214,34 +2216,34 @@ fi
 #for i in dummy tinyalsa alsa qsa coreaudio esd jack nas oss portaudio pulse sdl sndio sun win32 win32_wasapi aix alib arts hp os2 sgi mint openal
 #do echo $i; done |
 #perl -ne 'chomp; $big = uc($_); print <<EOT;
-#AM_CONDITIONAL([BUILD_${big}], [ test "$_" = \$default_output_module ])
+#AM_CONDITIONAL([BUILD_${big}], [ test "$_" = "\$default_output_module" ])
 #EOT
 #'
 
-AM_CONDITIONAL([BUILD_DUMMY], [ test "dummy" = $default_output_module ])
-AM_CONDITIONAL([BUILD_TINYALSA], [ test "tinyalsa" = $default_output_module ])
-AM_CONDITIONAL([BUILD_ALSA], [ test "alsa" = $default_output_module ])
-AM_CONDITIONAL([BUILD_QSA], [ test "qsa" = $default_output_module ])
-AM_CONDITIONAL([BUILD_COREAUDIO], [ test "coreaudio" = $default_output_module ])
-AM_CONDITIONAL([BUILD_ESD], [ test "esd" = $default_output_module ])
-AM_CONDITIONAL([BUILD_JACK], [ test "jack" = $default_output_module ])
-AM_CONDITIONAL([BUILD_NAS], [ test "nas" = $default_output_module ])
-AM_CONDITIONAL([BUILD_OSS], [ test "oss" = $default_output_module ])
-AM_CONDITIONAL([BUILD_PORTAUDIO], [ test "portaudio" = $default_output_module ])
-AM_CONDITIONAL([BUILD_PULSE], [ test "pulse" = $default_output_module ])
-AM_CONDITIONAL([BUILD_SDL], [ test "sdl" = $default_output_module ])
-AM_CONDITIONAL([BUILD_SNDIO], [ test "sndio" = $default_output_module ])
-AM_CONDITIONAL([BUILD_SUN], [ test "sun" = $default_output_module ])
-AM_CONDITIONAL([BUILD_WIN32], [ test "win32" = $default_output_module ])
-AM_CONDITIONAL([BUILD_WIN32_WASAPI], [ test "win32_wasapi" = $default_output_module ])
-AM_CONDITIONAL([BUILD_AIX], [ test "aix" = $default_output_module ])
-AM_CONDITIONAL([BUILD_ALIB], [ test "alib" = $default_output_module ])
-AM_CONDITIONAL([BUILD_ARTS], [ test "arts" = $default_output_module ])
-AM_CONDITIONAL([BUILD_HP], [ test "hp" = $default_output_module ])
-AM_CONDITIONAL([BUILD_OS2], [ test "os2" = $default_output_module ])
-AM_CONDITIONAL([BUILD_SGI], [ test "sgi" = $default_output_module ])
-AM_CONDITIONAL([BUILD_MINT], [ test "mint" = $default_output_module ])
-AM_CONDITIONAL([BUILD_OPENAL], [ test "openal" = $default_output_module ])
+AM_CONDITIONAL([BUILD_DUMMY], [ test "dummy" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_TINYALSA], [ test "tinyalsa" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_ALSA], [ test "alsa" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_QSA], [ test "qsa" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_COREAUDIO], [ test "coreaudio" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_ESD], [ test "esd" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_JACK], [ test "jack" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_NAS], [ test "nas" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_OSS], [ test "oss" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_PORTAUDIO], [ test "portaudio" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_PULSE], [ test "pulse" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_SDL], [ test "sdl" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_SNDIO], [ test "sndio" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_SUN], [ test "sun" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_WIN32], [ test "win32" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_WIN32_WASAPI], [ test "win32_wasapi" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_AIX], [ test "aix" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_ALIB], [ test "alib" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_ARTS], [ test "arts" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_HP], [ test "hp" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_OS2], [ test "os2" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_SGI], [ test "sgi" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_MINT], [ test "mint" = "$default_output_module" ])
+AM_CONDITIONAL([BUILD_OPENAL], [ test "openal" = "$default_output_module" ])
 
 default_modstring=`echo "$default_output_modules"|tr ' ' ,`
 AC_DEFINE_UNQUOTED( DEFAULT_OUTPUT_MODULE, "$default_modstring", [The default audio output module(s) to use] )
@@ -2577,7 +2579,10 @@ AC_ARG_ENABLE(network,
 
 AC_MSG_CHECKING([for preferred network support])
 AC_ARG_WITH([network],
-  [AS_HELP_STRING([--with-network=<type>], [Available options, depending on platform, are auto, none, internal, winhttp, wininet, and exec (wget or curl binaries).])],
+  [AS_HELP_STRING([--with-network=<type>],
+[Available options, depending on platform, are auto, none, internal, winhttp, wininet (or wininethttp for both), and exec (wget or curl binaries).
+The internal code is always built in addition to external options for plain HTTP (esp. Shoutcast v1) support.
+The external option is for HTTPS by default, but can be used for HTTP, too.])],
   [
     case "$withval" in
       exec)
@@ -2591,6 +2596,10 @@ AC_ARG_WITH([network],
       wininet)
         network_type="wininet"
         AC_MSG_RESULT([wininet])
+        ;;
+      wininethttp)
+        network_type="wininethttp"
+        AC_MSG_RESULT([wininethttp])
         ;;
       internal)
         network_type="internal"
@@ -2619,7 +2628,7 @@ if test x$network_type = xauto; then
   if test "x$have_fork" = "xyes"; then
     network_type=exec
   elif test "x$win32_specific_codes" = "xenabled"; then
-    network_type=wininet
+    network_type=wininethttp
   elif test "x$have_network" = "xyes"; then
     network_type="internal"
   else
@@ -2635,7 +2644,7 @@ fi
 if test x$network_type = xexec -a x$have_fork != xyes; then
   AC_MSG_ERROR([exec network support selected but fork not available])
 fi
-if test x$network_type = xwininet -o x$network_type = xwinhttp && test x$win32_specific_codes != xenabled; then
+if test x$network_type = xwininet -o x$network_type = xwinhttp -o x$network_type = xwininethttp && test x$win32_specific_codes != xenabled; then
   AC_MSG_ERROR([wininet or winhttp is currently only for Windows])
 fi
 
@@ -2644,7 +2653,7 @@ AM_CONDITIONAL([WIN32_CODES], [ test "x$win32_specific_codes" = xenabled ])
 
 if test x"$ipv6" = xauto; then
 	AC_MSG_CHECKING([IPv6 use])
-	if test x"$have_ipv6" = xyes -a x"$network_type" = xinternal; then
+	if test x"$have_ipv6" = xyes -a x"$network_type" != xdisabled; then
 		ipv6=enabled
 	else
 		ipv6=disabled
@@ -2652,14 +2661,31 @@ if test x"$ipv6" = xauto; then
 	AC_MSG_RESULT([$ipv6])
 fi
 
-if test x$network_type = xinternal -a x$network_internal = xwinsock2; then
+if test x$network_type != xdisabled -a x$network_internal = xwinsock2; then
   AC_DEFINE([WANT_WIN32_SOCKETS], [1], [ Define to use Win32 sockets ])
 fi
 
-AM_CONDITIONAL([NETWORK_WINSOCK], [ test x$network_type = xinternal -a x$network_internal = xwinsock2 ])
+AM_CONDITIONAL([NETWORK_WINSOCK], [ test x$network_type != xdisabled -a x$network_internal = xwinsock2 ])
+AM_CONDITIONAL([NET123], [ test x$network_type != xdisabled ])
 AM_CONDITIONAL([NET123_EXEC], [ test x$network_type = xexec ])
-AM_CONDITIONAL([NET123_WINHTTP], [ test x$network_type = xwinhttp ])
-AM_CONDITIONAL([NET123_WININET], [ test x$network_type = xwininet ])
+AM_CONDITIONAL([NET123_WINHTTP], [ test x$network_type = xwinhttp || test x$network_type = xwininethttp ])
+AM_CONDITIONAL([NET123_WININET], [ test x$network_type = xwininet || test x$network_type = xwininethttp ])
+
+case "$network_type" in
+  exec)
+    AC_DEFINE(NET123_EXEC,    1, [ Define for executable-based networking (for HTTPS). ])
+  ;;
+  winhttp)
+    AC_DEFINE(NET123_WINHTTP, 1, [ Define for winhttp networking (for HTTPS). ])
+  ;;
+  wininet)
+    AC_DEFINE(NET123_WININET, 1, [ Define for wininet networking (for HTTPS). ])
+  ;;
+  wininethttp)
+    AC_DEFINE(NET123_WININET, 1, [ Define for wininet networking (for HTTPS). ])
+    AC_DEFINE(NET123_WINHTTP, 1, [ Define for winhttp networking (for HTTPS). ])
+  ;;
+esac
 
 dnl ############## Terminal choice
 
@@ -2685,7 +2711,7 @@ if test x"$fifo" = xenabled; then
 fi
 
 dnl ############## Network enable
-if test x"$network_type" = xinternal; then
+if test x"$network_type" != xdisabled; then
 	AC_DEFINE(NETWORK, 1, [ Define if network support is enabled. ])
 	if test x"$have_network" = xno; then
 		AC_MSG_WARN( [ You forced network code while I think there is support missing! ] )
@@ -2742,9 +2768,11 @@ echo "
   Extreme debugging ....... $xdebugging
   Seek table size ......... $seektable
   FIFO support ............ $fifo
-  Buffer .................. $buffer
-  Network (http streams) .. $network_type"
-if test x$network_type = xinternal; then
+  Buffer .................. $buffer"
+if test x$network_type != xdisabled; then
+  if test x$network_type != xinternal; then
+    echo "  External network ........ $network_type"
+  fi
   echo "  Internal network type ... $network_internal
   IPv6 (getaddrinfo) ...... $ipv6"
 fi
