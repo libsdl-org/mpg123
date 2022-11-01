@@ -19,6 +19,10 @@
 /* Define if .align takes 3 for alignment of 2^3=8 bytes instead of 8. */
 #undef ASMALIGN_EXP
 
+/* No suffixed symbols for large file support (only alias for backwards
+   compat.) */
+#undef BUILD_NO_LARGENAME
+
 /* Define if __attribute__((aligned(16))) shall be used */
 #undef CCALIGN
 
