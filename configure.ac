@@ -9,7 +9,7 @@ dnl 2.69 at least.
 AC_PREREQ([2.69])
 
 dnl ############# Initialisation
-AC_INIT([mpg123], [1.31.2], [maintainer@mpg123.org])
+AC_INIT([mpg123], [1.31.3], [maintainer@mpg123.org])
 dnl Increment API_VERSION when the API gets changes (new functions).
 
 dnl libmpg123
@@ -22,7 +22,7 @@ OUTLIB_PATCHLEVEL=7
 
 dnl libsyn123
 SYNAPI_VERSION=1
-SYNLIB_PATCHLEVEL=4
+SYNLIB_PATCHLEVEL=5
 
 dnl Since we want to be backwards compatible, both sides get set to API_VERSION.
 LIBMPG123_VERSION=$API_VERSION:$LIB_PATCHLEVEL:$API_VERSION
@@ -900,7 +900,7 @@ if test "x$int8" = "xdisabled"; then
   AC_DEFINE(NO_8BIT, 1, [ Define to disable 8 bit integer output. ])
 fi
 
-AM_CONDITIONAL([HAVE_SYNTH8], [test "x$int16" = "xenabled"])
+AM_CONDITIONAL([HAVE_SYNTH8], [test "x$int8" = "xenabled"])
 
 if test "x$int32" = "xdisabled"; then
   AC_DEFINE(NO_32BIT, 1, [ Define to disable 32 bit and 24 bit integer output. ])
