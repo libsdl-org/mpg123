@@ -456,7 +456,7 @@ check_PROGRAMS = $(am__EXEEXT_5)
 @BUILD_LIBMPG123_TRUE@@NEED_MAINLIB_TRUE@am__append_127 = libmpg123.pc
 @BUILD_LIBOUT123_TRUE@@NEED_MAINLIB_TRUE@am__append_128 = libout123.pc
 @BUILD_LIBSYN123_TRUE@@NEED_MAINLIB_TRUE@am__append_129 = libsyn123.pc
-@BUILD_PROGRAMS_TRUE@@NEED_MAN_TRUE@am__append_130 = man1/mpg123.1 man1/out123.1
+@BUILD_PROGRAMS_TRUE@am__append_130 = man1/mpg123.1 man1/out123.1
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -2194,7 +2194,9 @@ nodist_include_HEADERS =
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_42) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_43) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_109)
-@NEED_MAN_TRUE@dist_man_MANS = $(am__append_130)
+# Attempts to wrap that in NEED_MAN failed. So just live with the
+# empty directory.
+dist_man_MANS = $(am__append_130)
 CLEANFILES = src/*.a
 XFAIL_TESTS = $(am__append_3)
 # That can be trimmed down later when adapting the sources to
