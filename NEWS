@@ -1,5 +1,59 @@
+1.32.0
+------
+- build:
+-- Move version handling out of configure.ac to ease other build systems.
+-- Include "fmt123.h" instead of <fmt123.h> in main API headers to make it more likely the
+   correct one is included (at least gcc picks the one in the same directory as the
+   including header first).
+-- All headers are build-independent now.
+-- Fix build for picky linkers by avoiding definition of wrap_getcpuflags() where it is not
+   used (spurious linker error to non-exitent getcpuflags(), bug 353).
+-- Handle deprecation of C99 detection macro in autoconf 2.70.
+-- No use of AC_SYS_LARGEFILE anymore for explicit handling and differing choice for
+   the libraries and frontend programs.
+-- Added --enable-portable and --disable-largefile to configure, removing the other
+   largefile-related options.
+-- Added --disable-components --enable-libmpg123 to only build libmpg123 (and likewise
+   --enable-libout123, --enable-libout123-modules, --enable-libsyn123) to autoconf
+   build. CMake build has something  similar with BUILD_PROGRAMS and BUILD_LIBOUT123,
+   which leave only libmpg123 and libsyn123 if disabled). (bug 351)
+-- Consistent formatting of ./configure --help with AS_HELP_STRING().
+- ports/Sony_PSP: removed
+- mpg123:
+-- Added --libversion.
+-- Added proper A-B looping with terminal control key 'o', renamed
+   --pauseloop to --presetloop.
+-- Really get rid of mpg123_position() usage. (It was all lies before!)
+-- Fix terminal progress info when seeking in stopped mode (1.31 regression).
+-- Patch up interaction of output buffer with generic remote control, adding
+   non-interruptible drain after P 3, and dropping buffer on QUIT.
+-- Uppercase some generic control replies for consinstency: SILENCE, PROGRESS,
+   MUTE, UNMUTE
+- libmpg123, libout123, libsyn123:
+-- Bumped API version for version query functions.
+-- Replaced nearly all symbol renames with explicit INT123_ prefix declarations
+   (intsym.h close to empty now).
+- libout123:
+-- Add sleep builtin output module (silent, but proper timing).
+- libsyn123:
+-- Introduced SYN123_PORTABLE_API for an API without off_t and ssize_t
+   (see NEWS.libsyn123).
+- libmpg123:
+-- Internal I/O using explicit largefile support via off64_t, lseek64, fallback
+   to plain 32 bit off_t.
+-- Added explicit 64 bit API with 64 suffix (mpg123_tell64(), not mpg123_tell_64()).
+   This allows full avoidance of ambiguus off_t. The API is always using 64 bit
+   integers, regardless of internal implementation. (bug 344)
+-- Introduced MPG123_PORTABLE_API for an API subset without off_t and
+   ssize_t.
+-- Made mpg123_seek() and friends ignore offset sign for SEEK_END (always seeking
+   towards beginning, assuming negative offset) to make lseek()-conforming usage
+   possible. Seeking beyond the end never made sense, so no loss of valid functionality.
+- Overall use of INT123_strerror(), trying to use thread-safe strerror_l() if possible.
+
 1.31.3
 ------
+
 - build:
 -- Fix --disable-8bit.
 -- Fall back to generic decoder if no yasm for MSVC (bug 346).

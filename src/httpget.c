@@ -28,6 +28,7 @@
 
 #include "mpg123app.h"
 #include "httpget.h"
+#include "version.h"
 
 #ifdef NETWORK
 #include "resolver.h"
@@ -329,7 +330,7 @@ int fill_request(mpg123_string *request, mpg123_string *host, mpg123_string *por
 	if(   !mpg123_add_string(request, " HTTP/1.0\r\nUser-Agent: ")
 		 || !mpg123_add_string(request, PACKAGE_NAME)
 		 || !mpg123_add_string(request, "/")
-		 || !mpg123_add_string(request, PACKAGE_VERSION)
+		 || !mpg123_add_string(request, MPG123_VERSION)
 		 || !mpg123_add_string(request, "\r\n") )
 	return FALSE;
 
@@ -472,7 +473,7 @@ int http_open(const char* url, struct httpdata *hd, const char * const *client_h
 #ifdef WANT_WIN32_SOCKETS
 		if(!win32_net_writestring (sock, &request))
 #else
-		if(unintr_write(sock, request.p, request.fill-1) != request.fill-1)
+		if(INT123_unintr_write(sock, request.p, request.fill-1) != request.fill-1)
 #endif
 		{
 			http_failure;

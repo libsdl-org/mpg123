@@ -4,7 +4,7 @@
 	This evolved into the generic I/O interposer for direct file or http stream
 	access, with explicit buffering for getline.
 
-	copyright 2010-2022 by the mpg123 project - free software under the terms of the LGPL 2.1
+	copyright 2010-2023 by the mpg123 project - free software under the terms of the LGPL 2.1
 	see COPYING and AUTHORS files in distribution or http://mpg123.org
 	initially written by Michael Hipp
 */
@@ -63,7 +63,7 @@ void *buf, size_t bufsize )
 #ifdef WANT_WIN32_SOCKETS
 	return win32_net_read(*fdp, buf, bufsize);
 #else
-	return unintr_read(*fdp, buf, bufsize);
+	return INT123_unintr_read(*fdp, buf, bufsize);
 #endif
 
 }
@@ -165,24 +165,24 @@ static int dump_fd = -1;
 // Read without the buffer. This is used to fill the buffer explicitly in getline.
 // This is the function that finally wraps around all the different types of input.
 
-static ssize_t stream_read_raw(struct stream *sd, void *buf, size_t count)
+static mpg123_ssize_t stream_read_raw(struct stream *sd, void *buf, size_t count)
 {
-	ssize_t ret = -1;
+	mpg123_ssize_t ret = -1;
 #ifdef NETWORK
 	if(sd->nh)
-		ret = (ssize_t) sd->nh->read(sd->nh, buf, count);
+		ret = (mpg123_ssize_t) sd->nh->read(sd->nh, buf, count);
 #endif
 	if(sd->fd >= 0) // plain file or network socket
-		ret = (ssize_t) unintr_read(sd->fd, buf, count);
+		ret = (mpg123_ssize_t) INT123_unintr_read(sd->fd, buf, count);
 	return ret;
 }
 
-static ssize_t stream_read(struct stream *sd, void *buf, size_t count)
+static mpg123_ssize_t stream_read(struct stream *sd, void *buf, size_t count)
 {
 	if(!sd)
 		return -1;
 	char *bbuf = buf;
-	ssize_t ret = 0;
+	mpg123_ssize_t ret = 0;
 	if(count > SSIZE_MAX)
 		return -1;
 	while(count)
@@ -196,7 +196,7 @@ static ssize_t stream_read(struct stream *sd, void *buf, size_t count)
 			sd->bufp += get;
 		} else
 		{ // get it from the source
-			ssize_t rret = stream_read_raw(sd, bbuf, count);
+			mpg123_ssize_t rret = stream_read_raw(sd, bbuf, count);
 			if(rret < 0)
 				return ret > 0 ? ret : -1;
 			if(rret == 0)
@@ -226,7 +226,7 @@ static off_t stream_seek(struct stream *sd, off_t pos, int whence)
 // Yes, either \r or \n ends a line, a following \n or \r is just swallowed.
 // Need to catch the case where the buffer ends with \r and the next buffer
 // contents start with the matching \n, and the other way round.
-ssize_t stream_getline(struct stream *sd, mpg123_string *line)
+mpg123_ssize_t stream_getline(struct stream *sd, mpg123_string *line)
 {
 	if(!sd || !line)
 		return -1;
@@ -273,7 +273,7 @@ ssize_t stream_getline(struct stream *sd, mpg123_string *line)
 		{
 			debug("re-filling buffer");
 			// refill buffer
-			ssize_t ret = stream_read_raw(sd, sd->buf, sizeof(sd->buf));
+			mpg123_ssize_t ret = stream_read_raw(sd, sd->buf, sizeof(sd->buf));
 			mdebug("raw read return: %zd", ret);
 			if(ret < 0)
 				return -1;
@@ -529,7 +529,7 @@ struct stream *stream_open(const char *url)
 	if(!strcmp(url, "-"))
 	{
 		sd->fd = STDIN_FILENO;
-		compat_binmode(STDIN_FILENO, TRUE);
+		INT123_compat_binmode(STDIN_FILENO, TRUE);
 	}
 #ifdef NETWORK
 	else if(!strncasecmp("http://", url, 7) || !strncasecmp("https://", url, 8))
@@ -594,10 +594,10 @@ struct stream *stream_open(const char *url)
 		if(!strncasecmp("file://", url, 7))
 			url+= 7; // Might be useful to prepend file scheme prefix for local stuff.
 		errno = 0;
-		sd->fd = compat_open(url, O_RDONLY|O_BINARY);
+		sd->fd = INT123_compat_open(url, O_RDONLY|O_BINARY);
 		if(sd->fd < 0)
 		{
-			merror("failed to open file: %s: %s", url, strerror(errno));
+			merror("failed to open file: %s: %s", url, INT123_strerror(errno));
 			stream_close(sd);
 			return NULL;
 		}
@@ -614,13 +614,13 @@ void stream_close(struct stream *sd)
 }
 
 /* Read data from input, write copy to dump file. */
-static ssize_t dump_read(void *handle, void *buf, size_t count)
+static mpg123_ssize_t dump_read(void *handle, void *buf, size_t count)
 {
 	struct stream *sd = handle;
-	ssize_t ret = stream_read(sd, buf, count);
+	mpg123_ssize_t ret = stream_read(sd, buf, count);
 	if(ret > 0 && dump_fd > -1)
 	{
-		ret = unintr_write(dump_fd, buf, ret);
+		ret = INT123_unintr_write(dump_fd, buf, ret);
 	}
 	return ret;
 }
@@ -658,11 +658,11 @@ int dump_setup(struct stream *sd, mpg123_handle *mh)
 		{
 			if(!param.quiet)
 				fprintf(stderr, "Note: Dumping stream to %s\n", param.streamdump);
-			dump_fd = compat_open(param.streamdump, O_CREAT|O_TRUNC|O_RDWR);
+			dump_fd = INT123_compat_open(param.streamdump, O_CREAT|O_TRUNC|O_RDWR);
 		}
 		if(dump_fd < 0)
 		{
-			error1("Failed to open dump file: %s\n", strerror(errno));
+			error1("Failed to open dump file: %s\n", INT123_strerror(errno));
 			return -1;
 		}
 #ifdef WIN32
@@ -696,7 +696,7 @@ int dump_setup(struct stream *sd, mpg123_handle *mh)
 
 void dump_close(void)
 {
-	if(dump_fd > -1) compat_close(dump_fd);
+	if(dump_fd > -1) INT123_compat_close(dump_fd);
 
 	dump_fd = -1;
 }

@@ -1,7 +1,8 @@
 /*
 	control_generic.c: control interface for frontends and real console warriors
 
-	copyright 1997-99,2004-20 by the mpg123 project - free software under the terms of the LGPL 2.1
+	copyright 1997-99,2004-23 by the mpg123 project
+	free software under the terms of the LGPL 2.1
 	see COPYING and AUTHORS files in distribution or http://mpg123.org
 	initially written by Andreas Neuhaus and Michael Hipp
 	reworked by Thomas Orgis - it was the entry point for eventually becoming maintainer...
@@ -57,6 +58,7 @@ FILE *outstream;
 int out_is_term = FALSE;
 static int mode = MODE_STOPPED;
 static int init = 0;
+static int sendstat_disabled = FALSE;
 
 #include "debug.h"
 
@@ -167,10 +169,18 @@ static void generic_send_lines(int is_utf8, const char* fmt, mpg123_string *inli
 
 void generic_sendstat (mpg123_handle *fr)
 {
+	if(sendstat_disabled)
+		return;
 	off_t current_frame, frames_left;
 	double current_seconds, seconds_left;
-	if(!mpg123_position(fr, 0, out123_buffered(ao), &current_frame, &frames_left, &current_seconds, &seconds_left))
+
+	if(!position_info(fr, 0, ao, &current_frame, &frames_left, &current_seconds, &seconds_left, NULL, NULL))
 	generic_sendmsg("F %"OFF_P" %"OFF_P" %3.2f %3.2f", (off_p)current_frame, (off_p)frames_left, current_seconds, seconds_left);
+	else
+	{
+		sendstat_disabled = TRUE;
+		generic_sendmsg("E Error getting position information, disabling playback status.");
+	}
 }
 
 // This is only valid as herlper to generic_sendv1, observe info memory usage!
@@ -300,6 +310,7 @@ void generic_sendinfo (char *filename)
 
 static void generic_load(mpg123_handle *fr, char *arg, int state)
 {
+	sendstat_disabled = FALSE;
 	out123_drop(ao);
 	if(mode != MODE_STOPPED)
 	{
@@ -408,7 +419,7 @@ int control_generic (mpg123_handle *fr)
 #endif
 	/* the command behaviour is different, so is the ID */
 	/* now also with version for command availability */
-	fprintf(outstream, "@R MPG123 (ThOr) v10\n");
+	fprintf(outstream, "@R MPG123 (ThOr) v11\n");
 #ifdef FIFO
 	if(param.fifo)
 	{
@@ -421,7 +432,7 @@ int control_generic (mpg123_handle *fr)
 		unlink(param.fifo);
 		if(mkfifo(param.fifo, 0666) == -1)
 		{
-			error2("Failed to create FIFO at %s (%s)", param.fifo, strerror(errno));
+			error2("Failed to create FIFO at %s (%s)", param.fifo, INT123_strerror(errno));
 			return 1;
 		}
 		debug("going to open named pipe ... blocking until someone gives command");
@@ -455,8 +466,34 @@ int control_generic (mpg123_handle *fr)
 			if (n == 0) {
 				if (!play_frame())
 				{
-					generic_sendmsg("P 3");
+					size_t drain_block;
+					size_t buffered;
+
+					// Ensure that prepared audio really got played, drain buffer.
+					// There is no control during draining. This mode was not planned for big buffers.
+					play_prebuffer();
+					buffered = out123_buffered(ao);
+					if(buffered)
+					{
+						int framesize = 1;
+						long rate = 1;
+						out123_getformat(ao, &rate, NULL, NULL, &framesize);
+						generic_sendmsg("DRAIN %.1f", (double)buffered/framesize/rate);
+						if(silent == 0)
+						{
+							generic_sendstat(fr);
+							drain_block = 1152*framesize;
+							do
+							{
+								out123_ndrain(ao, drain_block);
+								generic_sendstat(fr);
+							}
+							while(out123_buffered(ao));
+						} else
+							out123_drain(ao);
+					}
 					out123_pause(ao);
+					generic_sendmsg("P 3");
 					/* When the track ended, user may want to keep it open (to seek back),
 					   so there is a decision between stopping and pausing at the end. */
 					if(param.keep_open)
@@ -505,7 +542,7 @@ int control_generic (mpg123_handle *fr)
 		/*  on error */
 		if(n < 0)
 		{
-			merror("waiting for command: %s", strerror(errno));
+			merror("waiting for command: %s", INT123_strerror(errno));
 			return 1;
 		}
 		/* read & process commands */
@@ -536,11 +573,11 @@ int control_generic (mpg123_handle *fr)
 					close(control_file);
 					control_file = open(param.fifo,O_RDONLY|O_NONBLOCK);
 #endif
-					if(control_file < 0){ error1("open of fifo failed... %s", strerror(errno)); break; }
+					if(control_file < 0){ error1("open of fifo failed... %s", INT123_strerror(errno)); break; }
 					continue;
 				}
 #endif
-				if(len < 0) error1("command read error: %s", strerror(errno));
+				if(len < 0) error1("command read error: %s", INT123_strerror(errno));
 				break;
 			}
 
@@ -600,26 +637,26 @@ int control_generic (mpg123_handle *fr)
 				/* SILENCE */
 				if(!strcasecmp(comstr, "SILENCE")) {
 					silent = 1;
-					generic_sendmsg("silence");
+					generic_sendmsg("SILENCE");
 					continue;
 				}
 
 				/* PROGRESS, opposite of silence */
 				if(!strcasecmp(comstr, "PROGRESS")) {
 					silent = 0;
-					generic_sendmsg("progress");
+					generic_sendmsg("PROGRESS");
 					continue;
 				}
 
 				if(!strcasecmp(comstr, "MUTE")) {
 					set_mute(ao, muted=TRUE);
-					generic_sendmsg("mute");
+					generic_sendmsg("MUTE");
 					continue;
 				}
 
 				if(!strcasecmp(comstr, "UNMUTE")) {
 					set_mute(ao, muted=FALSE);
-					generic_sendmsg("unmute");
+					generic_sendmsg("UNMUTE");
 					continue;
 				}
 
@@ -690,6 +727,7 @@ int control_generic (mpg123_handle *fr)
 
 				/* QUIT */
 				if (!strcasecmp(comstr, "Q") || !strcasecmp(comstr, "QUIT")){
+					out123_drop(ao);
 					alive = FALSE; continue;
 				}
 

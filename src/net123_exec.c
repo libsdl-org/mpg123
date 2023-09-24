@@ -1,6 +1,11 @@
 /*
 	net123_exec: network (HTTP(S)) streaming for mpg123 via fork+exec
 
+	copyright 2022-2023 by the mpg123 project
+	free software under the terms of the LGPL 2.1
+	see COPYING and AUTHORS files in distribution or http://mpg123.org
+	initially written by Thomas Orgis
+
 	This avoids linking any network code directly into mpg123, just using external
 	tools at runtime.
 
@@ -13,6 +18,7 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include "config.h"
+#include "version.h"
 #include "net123.h"
 // for strings
 #include "mpg123.h"
@@ -72,8 +78,8 @@ static int check_program(char * const *argv, const char *token)
 	{
 		if(pipe(fd))
 			return 0;
-		compat_binmode(fd[0], TRUE);
-		compat_binmode(fd[1], TRUE);
+		INT123_compat_binmode(fd[0], TRUE);
+		INT123_compat_binmode(fd[1], TRUE);
 	}
 	pid_t pid = fork();
 	if(pid == 0)
@@ -102,7 +108,7 @@ static int check_program(char * const *argv, const char *token)
 			{
 				size_t bufoff = 0;
 				size_t got;
-				while( (got = unintr_read(fd[0], buf+bufoff, sizeof(buf)-1-bufoff)) )
+				while( (got = INT123_unintr_read(fd[0], buf+bufoff, sizeof(buf)-1-bufoff)) )
 				{
 					bufoff += got;
 					buf[bufoff] = 0; // Now it's a terminated string.
@@ -151,7 +157,7 @@ static char **wget_argv(const char *url, const char * const * client_head)
 	char *httpauth = NULL;
 	char *user = NULL;
 	char *password = NULL;
-	if(param.httpauth && (httpauth = compat_strdup(param.httpauth)))
+	if(param.httpauth && (httpauth = INT123_compat_strdup(param.httpauth)))
 	{
 		char *sep = strchr(httpauth, ':');
 		if(sep)
@@ -170,15 +176,15 @@ static char **wget_argv(const char *url, const char * const * client_head)
 	}
 	int an = 0;
 	for(;an<sizeof(base_args)/sizeof(char*); ++an)
-		argv[an] = compat_strdup(base_args[an]);
-	argv[an++] = compat_strdup("--user-agent=" PACKAGE_NAME "/" PACKAGE_VERSION);
+		argv[an] = INT123_compat_strdup(base_args[an]);
+	argv[an++] = INT123_compat_strdup("--user-agent=" PACKAGE_NAME "/" MPG123_VERSION);
 	for(size_t ch=0; ch < cheads; ++ch)
 		argv[an++] = catstr("--header=", client_head[ch]);
 	if(user)
 		argv[an++] = catstr("--user=", user);
 	if(password)
 		argv[an++] = catstr("--password=", password);
-	argv[an++] = compat_strdup(url);
+	argv[an++] = INT123_compat_strdup(url);
 	argv[an++] = NULL;
 	return argv;
 }
@@ -205,7 +211,7 @@ static char **curl_argv(const char *url, const char * const * client_head)
 	if(got_curl > 1)
 		argc++; // add --http0.9
 	char *httpauth = NULL;
-	if(param.httpauth && (httpauth = compat_strdup(param.httpauth)))
+	if(param.httpauth && (httpauth = INT123_compat_strdup(param.httpauth)))
 		argc += 2;
 	char ** argv = malloc(sizeof(char*)*(argc+1));
 	if(!argv)
@@ -215,22 +221,22 @@ static char **curl_argv(const char *url, const char * const * client_head)
 	}
 	int an = 0;
 	for(;an<sizeof(base_args)/sizeof(char*); ++an)
-		argv[an] = compat_strdup(base_args[an]);
+		argv[an] = INT123_compat_strdup(base_args[an]);
 	if(got_curl > 1)
-		argv[an++] = compat_strdup("--http0.9");
-	argv[an++] = compat_strdup("--user-agent");
-	argv[an++] = compat_strdup(PACKAGE_NAME "/" PACKAGE_VERSION);
+		argv[an++] = INT123_compat_strdup("--http0.9");
+	argv[an++] = INT123_compat_strdup("--user-agent");
+	argv[an++] = INT123_compat_strdup(PACKAGE_NAME "/" MPG123_VERSION);
 	for(size_t ch=0; ch < cheads; ++ch)
 	{
-		argv[an++] = compat_strdup("--header");
-		argv[an++] = compat_strdup(client_head[ch]);
+		argv[an++] = INT123_compat_strdup("--header");
+		argv[an++] = INT123_compat_strdup(client_head[ch]);
 	}
 	if(httpauth)
 	{
-		argv[an++] = compat_strdup("--user");
+		argv[an++] = INT123_compat_strdup("--user");
 		argv[an++] = httpauth;
 	}
-	argv[an++] = compat_strdup(url);
+	argv[an++] = INT123_compat_strdup(url);
 	argv[an++] = NULL;
 	return argv;
 }
@@ -240,7 +246,7 @@ static size_t net123_read(net123_handle *nh, void *buf, size_t bufsize)
 {
 	if(!nh || (bufsize && !buf))
 		return 0;
-	return unintr_read(((exec_handle*)nh->parts)->fd, buf, bufsize);
+	return INT123_unintr_read(((exec_handle*)nh->parts)->fd, buf, bufsize);
 }
 
 static void net123_close(net123_handle *nh)
@@ -253,7 +259,7 @@ static void net123_close(net123_handle *nh)
 		kill(eh->worker, SIGKILL);
 		errno = 0;
 		if(waitpid(eh->worker, NULL, 0) < 0)
-			merror("failed to wait for worker process: %s", strerror(errno));
+			merror("failed to wait for worker process: %s", INT123_strerror(errno));
 		else if(param.verbose > 1)
 			fprintf(stderr, "Note: network helper %"PRIiMAX" finished\n", (intmax_t)eh->worker);
 	}
@@ -319,18 +325,18 @@ net123_handle *net123_open_exec(const char *url, const char * const * client_hea
 	errno = 0;
 	if(pipe(fd))
 	{	
-		merror("failed creating a pipe: %s", strerror(errno));
+		merror("failed creating a pipe: %s", INT123_strerror(errno));
 		free(nh);
 		return NULL;
 	}
 
-	compat_binmode(fd[0], TRUE);
-	compat_binmode(fd[1], TRUE);
+	INT123_compat_binmode(fd[0], TRUE);
+	INT123_compat_binmode(fd[1], TRUE);
 
 	eh->worker = fork();
 	if(eh->worker == -1)
 	{
-		merror("fork failed: %s", strerror(errno));
+		merror("fork failed: %s", INT123_strerror(errno));
 		free(nh);
 		return NULL;
 	}
@@ -366,7 +372,7 @@ net123_handle *net123_open_exec(const char *url, const char * const * client_hea
 			dup2(errfd, STDERR_FILENO);
 		}
 		execvp(argv[0], argv);
-		merror("cannot execute %s: %s", argv[0], strerror(errno));
+		merror("cannot execute %s: %s", argv[0], INT123_strerror(errno));
 		exit(1);
 	}
 	// parent
