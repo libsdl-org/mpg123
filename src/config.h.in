@@ -181,6 +181,9 @@
 /* Define to 1 if you have the <os2.h> header file. */
 #undef HAVE_OS2_H
 
+/* Define if O_LARGEFILE flag for open(2) exists. */
+#undef HAVE_O_LARGEFILE
+
 /* Define to 1 if you have the `random' function. */
 #undef HAVE_RANDOM
 
@@ -424,9 +427,6 @@
 
 /* Define to disable warning messages. */
 #undef NO_WARNING
-
-/* Define to 0 if system does not have/need it. */
-#undef O_LARGEFILE
 
 /* Name of package */
 #undef PACKAGE
