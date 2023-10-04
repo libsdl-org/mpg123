@@ -45,6 +45,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+// A paranoid check that someone did not define a wrong SIZEOF_OFF_T at configure time.
+typedef unsigned char MPG123_STATIC_ASSERT[(SIZEOF_OFF_T == sizeof(off_t)) ? 1 : -1];
+
 #include "debug.h"
 
 // We do not want to expose this publicly, but it is cleaner to have it also defined
@@ -91,7 +94,7 @@ struct wrap_data
 	off_t (*r_lseek)(int, off_t, int);
 	mpg123_ssize_t (*r_h_read)(void *, void *, size_t);
 	off_t (*r_h_lseek)(void*, off_t, int);
-#if LFS_LARGEFILE_64
+#ifdef LFS_LARGEFILE_64
 	mpg123_ssize_t (*r_read_64) (int, void *, size_t);
 	off64_t (*r_lseek_64)(int, off64_t, int);
 	mpg123_ssize_t (*r_h_read_64)(void *, void *, size_t);
@@ -176,7 +179,7 @@ static struct wrap_data* wrap_get(mpg123_handle *mh, int force_alloc)
 		whd->r_lseek = NULL;
 		whd->r_h_read = NULL;
 		whd->r_h_lseek = NULL;
-#if LFS_LARGEFILE_64
+#ifdef LFS_LARGEFILE_64
 		whd->r_read_64 = NULL;
 		whd->r_lseek_64 = NULL;
 		whd->r_h_read_64 = NULL;
