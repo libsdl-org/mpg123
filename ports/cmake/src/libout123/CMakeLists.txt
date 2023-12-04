@@ -17,6 +17,12 @@ add_library(${TARGET}
     $<$<BOOL:${USE_MODULES}>:$<TARGET_OBJECTS:compat_dl>>)
 
 set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME out123)
+if(BUILD_SHARED_LIBS AND WIN32)
+    # FIXME: keep soversion in sync with autotools
+    set_property(TARGET ${TARGET} PROPERTY RUNTIME_OUTPUT_NAME "out123-0")
+    # Requires CMake 3.27, so not sufficient
+    set_property(TARGET ${TARGET} PROPERTY DLL_NAME_WITH_SOVERSION FALSE)
+endif()
 
 if(HAVE_UNIX_DL)
     string(APPEND LIBOUT123_LIBS " -ldl")

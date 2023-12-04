@@ -205,6 +205,12 @@ elseif(MACHINE STREQUAL "generic")
 endif()
 
 set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME mpg123)
+if(BUILD_SHARED_LIBS AND WIN32)
+    # FIXME: keep soversion in sync with autotools
+    set_property(TARGET ${TARGET} PROPERTY RUNTIME_OUTPUT_NAME "mpg123-0")
+    # Requires CMake 3.27, so not sufficient
+    set_property(TARGET ${TARGET} PROPERTY DLL_NAME_WITH_SOVERSION FALSE)
+endif()
 
 target_compile_definitions(${TARGET} PRIVATE
     $<$<BOOL:$<TARGET_PROPERTY:POSITION_INDEPENDENT_CODE>>:PIC>)
