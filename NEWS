@@ -1,3 +1,15 @@
+1.32.5
+------
+
+- build:
+-- CMake port uses CFLAGS for pulse/jack/tinyalsa properly now (bug 366).
+-- CMake port links libsyn123 with libm now (bug 370).
+- libmpg123:
+-- Fix --enable-portable (no usage of LFS_WRAP_NONE, bug 368).
+-- Fix dct36 wrapper usage for x86-64 and NEON. Stupid (bug 367) and
+   also avoid returning void.
+-- Make ARM builds work with nagging (missing feature macros for std=c99).
+
 1.32.4
 ------
 - build:
