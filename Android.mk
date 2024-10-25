@@ -203,6 +203,7 @@ DECODER_SRC := $(DECODER_SRC_MIPS)
 endif
 
 LOCAL_CFLAGS := $(DECODER_CFLAGS)
+LOCAL_CFLAGS += -std=gnu99 -Wall
 
 LOCAL_SRC_FILES := \
     src/libmpg123/parse.c \
