@@ -4,6 +4,7 @@ include(cmake/read_api_version.cmake)
 read_api_version(MPG123_VERSION API_VERSION OUTAPI_VERSION SYNAPI_VERSION)
 
 project(mpg123 VERSION ${MPG123_VERSION} LANGUAGES C ASM)
+set(CMAKE_C_STANDARD 99)
 
 option(BUILD_LIBOUT123 "build libout123" ON)
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

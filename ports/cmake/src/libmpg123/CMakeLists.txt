@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 
 option(NO_FEATURE_REPORT "Disable feature report function" OFF)
 option(NO_LFS_ALIAS "disable alias wrappers for largefile bitness (mpg123_seek_32 or mpg123_seek_64 in addition to mpg123_seek, or the other way around; It is a mess, do not play with this!)" OFF)
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    option(WITH_SSE "x86: build with SSE support if detected. Turn OFF for older devices where autodetection is misleading." ON)
+endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/libmpg123/")
 
@@ -119,6 +122,9 @@ elseif(MACHINE STREQUAL "x86")
     endif()
 
     cmake_host_system_information(RESULT HAVE_SSE QUERY HAS_SSE)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+        set(HAVE_SSE ${WITH_SSE})
+    endif()
     if(HAVE_SSE)
         set(PLATFORM_DEFINITIONS OPT_SSE)
         set(PLATFORM_SOURCES
@@ -138,8 +144,6 @@ elseif(MACHINE STREQUAL "x86")
                 "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/libmpg123/dct64_sse.S"
                 "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/libmpg123/synth_sse.S")
         endif()
-        target_sources(${TARGET} PRIVATE
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/libmpg123/dct64_i386.c")
     endif()
 elseif(MACHINE STREQUAL "arm64")
         set(PLATFORM_DEFINITIONS OPT_MULTI OPT_GENERIC OPT_GENERIC_DITHER OPT_NEON64)
