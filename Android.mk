@@ -124,14 +124,10 @@ DECODER_CFLAGS_X64 := -DOPT_MULTI -DOPT_X86_64 -DOPT_GENERIC -DOPT_GENERIC_DITHE
 DECODER_SRC_X64 := \
     src/libmpg123/stringbuf.c \
     src/libmpg123/icy.c \
-    src/libmpg123/icy.h \
     src/libmpg123/icy2utf8.c \
-    src/libmpg123/icy2utf8.h \
     src/libmpg123/ntom.c \
     src/libmpg123/synth.c \
-    src/libmpg123/synth.h \
     src/libmpg123/synth_8bit.c \
-    src/libmpg123/synth_8bit.h \
     src/libmpg123/layer1.c \
     src/libmpg123/layer2.c \
     src/libmpg123/layer3.c \
@@ -147,7 +143,6 @@ DECODER_SRC_X64 := \
     src/libmpg123/dct64_x86_64.S \
     src/libmpg123/synth_stereo_x86_64.S \
     src/libmpg123/dither.c \
-    src/libmpg123/dither.h \
     src/libmpg123/getcpuflags_x86_64.S \
     src/libmpg123/dct36_avx.S \
     src/libmpg123/dct64_avx_float.S \
@@ -186,8 +181,8 @@ DECODER_CFLAGS := $(DECODER_CFLAGS_NEON64)
 DECODER_SRC := $(DECODER_SRC_NEON64)
 endif
 ifeq ($(TARGET_ARCH_ABI),x86)
-DECODER_CFLAGS := $(DECODER_CFLAGS_X86)
-DECODER_SRC := $(DECODER_SRC_X86)
+DECODER_CFLAGS := $(DECODER_CFLAGS_X86_ASM)
+DECODER_SRC := $(DECODER_SRC_X86_ASM)
 endif
 ifeq ($(TARGET_ARCH_ABI),x86_64)
 DECODER_CFLAGS := $(DECODER_CFLAGS_X64)

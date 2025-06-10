@@ -3,7 +3,9 @@
 
 /* Define if your architecture wants/needs/can use attribute_align_arg and
    alignment checks. It is for 32bit x86... */
-/* #undef ABI_ALIGN_FUN */
+#ifdef __i386__
+#define ABI_ALIGN_FUN 1
+#endif
 
 /* Define to use proper rounding. */
 /* #undef ACCURATE_ROUNDING */
@@ -374,16 +376,32 @@
 #define SIZEOF_INT32_T 4
 
 /* The size of `long', as computed by sizeof. */
+#ifdef _LP64
+#define SIZEOF_LONG 8
+#else
 #define SIZEOF_LONG 4
+#endif
 
 /* The size of `off_t', as computed by sizeof. */
+#ifdef _LP64
+#define SIZEOF_OFF_T 8
+#else
 #define SIZEOF_OFF_T 4
+#endif
 
 /* The size of `size_t', as computed by sizeof. */
+#ifdef _LP64
+#define SIZEOF_SIZE_T 8
+#else
 #define SIZEOF_SIZE_T 4
+#endif
 
 /* The size of `ssize_t', as computed by sizeof. */
+#ifdef _LP64
+#define SIZEOF_SSIZE_T 8
+#else
 #define SIZEOF_SSIZE_T 4
+#endif
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
