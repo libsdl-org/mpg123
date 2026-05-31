@@ -246,6 +246,7 @@ target_link_libraries(${TARGET} PRIVATE
     $<$<BOOL:${HAVE_M}>:m>
     $<$<BOOL:${WANT_WIN32_UNICODE}>:shlwapi>)
 target_include_directories(${TARGET} INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../../src/include/>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
