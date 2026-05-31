@@ -51,15 +51,15 @@ real* INT123_init_layer12_table(mpg123_handle *fr, real *table, int m)
 #ifdef OPT_MMXORSSE
 real* INT123_init_layer12_table_mmx(mpg123_handle *fr, real *table, int m)
 {
-	int i;
+	int i,j;
 	if(!fr->p.down_sample) 
 	{
-		for(i=0;i<63;i++)
+		for(j=3,i=0;i<63;i++,j--)
 			*table++ = 16384 * layer12_table[m][i];
 	}
 	else
 	{
-		for(i=0;i<63;i++)
+		for(j=3,i=0;i<63;i++,j--)
 			*table++ = layer12_table[m][i];
 	}
 	return table;

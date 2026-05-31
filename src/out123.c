@@ -27,12 +27,15 @@
 */
 
 #define ME "out123"
-#include "mpg123config.h"
+#include "config.h"
 #include "version.h"
 #include "compat/compat.h"
 #include <ctype.h>
-#ifdef _WIN32
+#if _WIN32
 #include "win32_support.h"
+#endif
+#if defined(_WIN32) && defined(DYNAMIC_BUILD)
+#define LINK_MPG123_DLL
 #endif
 #include "out123.h"
 
@@ -207,7 +210,7 @@ static void controlled_drain(void)
 
 static void safe_exit(int code)
 {
-	const char *dummy, *dammy;
+	char *dummy, *dammy;
 
 	if(input && input != stdin)
 		INT123_compat_fclose(input);

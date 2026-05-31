@@ -6,10 +6,13 @@
 	initially written by Thomas Orgis
 */
 
-#include "mpg123config.h"
+#include "config.h"
 #include "version.h"
 #include "compat/compat.h"
 
+#if defined(WIN32) && defined(DYNAMIC_BUILD)
+#define LINK_MPG123_DLL
+#endif
 #include <mpg123.h>
 
 #include "getlopt.h"
