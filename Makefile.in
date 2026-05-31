@@ -566,16 +566,17 @@ am__src_libmpg123_libmpg123_la_SOURCES_DIST =  \
 	src/libmpg123/tabinit.c src/libmpg123/libmpg123.c \
 	src/libmpg123/gapless.h src/libmpg123/mpg123lib_intern.h \
 	src/libmpg123/mangle.h src/libmpg123/aarch64_defs.h \
-	src/libmpg123/getcpuflags.h src/libmpg123/index.h \
-	src/libmpg123/index.c src/libmpg123/layer1.c \
-	src/libmpg123/layer2.c src/libmpg123/layer3.c \
-	src/libmpg123/equalizer.c src/libmpg123/dither.c \
-	src/libmpg123/synth_8bit.c src/libmpg123/synth.c \
-	src/libmpg123/synth_s32.c src/libmpg123/synth_real.c \
-	src/libmpg123/lfs_wrap.c src/libmpg123/icy.c \
-	src/libmpg123/icy2utf8.c src/libmpg123/feature.c \
-	src/libmpg123/ntom.c src/libmpg123/stringbuf.c \
-	src/libmpg123/getcpuflags.S src/libmpg123/getcpuflags_x86_64.S \
+	src/libmpg123/x86_64_defs.h src/libmpg123/getcpuflags.h \
+	src/libmpg123/index.h src/libmpg123/index.c \
+	src/libmpg123/layer1.c src/libmpg123/layer2.c \
+	src/libmpg123/layer3.c src/libmpg123/equalizer.c \
+	src/libmpg123/dither.c src/libmpg123/synth_8bit.c \
+	src/libmpg123/synth.c src/libmpg123/synth_s32.c \
+	src/libmpg123/synth_real.c src/libmpg123/lfs_wrap.c \
+	src/libmpg123/icy.c src/libmpg123/icy2utf8.c \
+	src/libmpg123/feature.c src/libmpg123/ntom.c \
+	src/libmpg123/stringbuf.c src/libmpg123/getcpuflags.S \
+	src/libmpg123/getcpuflags_x86_64.S \
 	src/libmpg123/getcpuflags_arm.c src/libmpg123/check_neon.S \
 	src/libmpg123/synth_altivec.c src/libmpg123/dct64_altivec.c \
 	src/libmpg123/dct64_i386.c src/libmpg123/synth_i486.c \
@@ -1240,13 +1241,14 @@ am__src_mpg123_SOURCES_DIST = src/audio.c src/audio.h src/common.c \
 	src/common.h src/sysutil.c src/sysutil.h src/control_generic.c \
 	src/equalizer.c src/getlopt.c src/getlopt.h src/httpget.c \
 	src/httpget.h src/resolver.c src/resolver.h src/genre.h \
-	src/genre.c src/mpg123.c src/mpg123app.h src/metaprint.c \
-	src/metaprint.h src/local.h src/local.c src/playlist.c \
-	src/playlist.h src/streamdump.h src/streamdump.c src/term.c \
-	src/term.h src/terms.h src/win32_support.h src/term_posix.c \
-	src/term_win32.c src/term_none.c src/net123.h \
-	src/net123_exec.c src/net123_winhttp.c src/net123_wininet.c \
-	src/win32_support.c src/win32_net.c
+	src/genre.c src/mpg123.c src/mpg123app.h src/mpg123config.h \
+	src/metaprint.c src/metaprint.h src/local.h src/local.c \
+	src/playlist.c src/playlist.h src/streamdump.h \
+	src/streamdump.c src/term.c src/term.h src/terms.h \
+	src/win32_support.h src/term_posix.c src/term_win32.c \
+	src/term_none.c src/net123.h src/net123_exec.c \
+	src/net123_winhttp.c src/net123_wininet.c src/win32_support.c \
+	src/win32_net.c
 @TERM_POSIX_TRUE@am__objects_69 = src/term_posix.$(OBJEXT)
 @TERM_WIN32_TRUE@am__objects_70 = src/term_win32.$(OBJEXT)
 @TERM_NONE_TRUE@am__objects_71 = src/term_none.$(OBJEXT)
@@ -2962,6 +2964,7 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/mpg123lib_intern.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/mangle.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/aarch64_defs.h \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/x86_64_defs.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/getcpuflags.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/index.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/index.c \
@@ -3103,13 +3106,14 @@ src_mpg123_SOURCES = src/audio.c src/audio.h src/common.c src/common.h \
 	src/sysutil.c src/sysutil.h src/control_generic.c \
 	src/equalizer.c src/getlopt.c src/getlopt.h src/httpget.c \
 	src/httpget.h src/resolver.c src/resolver.h src/genre.h \
-	src/genre.c src/mpg123.c src/mpg123app.h src/metaprint.c \
-	src/metaprint.h src/local.h src/local.c src/playlist.c \
-	src/playlist.h src/streamdump.h src/streamdump.c src/term.c \
-	src/term.h src/terms.h src/win32_support.h $(am__append_112) \
-	$(am__append_113) $(am__append_114) $(am__append_115) \
-	$(am__append_116) $(am__append_117) $(am__append_119) \
-	$(am__append_121) $(am__append_122)
+	src/genre.c src/mpg123.c src/mpg123app.h src/mpg123config.h \
+	src/metaprint.c src/metaprint.h src/local.h src/local.c \
+	src/playlist.c src/playlist.h src/streamdump.h \
+	src/streamdump.c src/term.c src/term.h src/terms.h \
+	src/win32_support.h $(am__append_112) $(am__append_113) \
+	$(am__append_114) $(am__append_115) $(am__append_116) \
+	$(am__append_117) $(am__append_119) $(am__append_121) \
+	$(am__append_122)
 
 # Replace common.h by sysutil.h!
 src_out123_SOURCES = src/sysutil.c src/sysutil.h src/common.h \
