@@ -134,14 +134,15 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = $(am__EXEEXT_3) $(am__EXEEXT_4)
 EXTRA_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
-TESTS = $(am__append_1) $(am__EXEEXT_6)
-check_PROGRAMS = $(am__EXEEXT_5)
+TESTS = $(am__append_1) $(am__EXEEXT_7)
+check_PROGRAMS = $(am__EXEEXT_5) $(am__EXEEXT_6)
 @BUILD_LIBMPG123_TRUE@@BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@am__append_1 = \
 @BUILD_LIBMPG123_TRUE@@BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@  src/tests/decode_fixed.sh
 
 @BUILD_LIBMPG123_TRUE@am__append_2 = \
 @BUILD_LIBMPG123_TRUE@  src/tests/seek_whence.sh \
 @BUILD_LIBMPG123_TRUE@  src/tests/seek_accuracy.sh \
+@BUILD_LIBMPG123_TRUE@  src/tests/resample_buffer \
 @BUILD_LIBMPG123_TRUE@  src/tests/resample_total \
 @BUILD_LIBMPG123_TRUE@  src/tests/text \
 @BUILD_LIBMPG123_TRUE@  src/tests/textprint \
@@ -152,7 +153,6 @@ check_PROGRAMS = $(am__EXEEXT_5)
 @BUILD_LIBMPG123_TRUE@  src/tests/decode_fixed \
 @BUILD_LIBMPG123_TRUE@  src/tests/seek_whence \
 @BUILD_LIBMPG123_TRUE@  src/tests/seek_accuracy \
-@BUILD_LIBMPG123_TRUE@  src/tests/resample_total \
 @BUILD_LIBMPG123_TRUE@  src/tests/text \
 @BUILD_LIBMPG123_TRUE@  src/tests/textprint \
 @BUILD_LIBMPG123_TRUE@  src/tests/plain_id3
@@ -164,6 +164,10 @@ check_PROGRAMS = $(am__EXEEXT_5)
 @BUILD_LIBMPG123_TRUE@  src/tests/seek_accuracy \
 @BUILD_LIBMPG123_TRUE@  src/tests/noise \
 @BUILD_LIBMPG123_TRUE@  src/tests/sweeper
+
+@BUILD_LIBSYN123_TRUE@am__append_6 = \
+@BUILD_LIBSYN123_TRUE@  src/tests/resample_total \
+@BUILD_LIBSYN123_TRUE@  src/tests/resample_buffer
 
 
 # Use that sh/perl script to generate the module entries:
@@ -206,68 +210,68 @@ check_PROGRAMS = $(am__EXEEXT_5)
 #endif
 #EOT
 #'
-@HAVE_DUMMY_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_6 = src/libout123/modules/output_dummy.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_TINYALSA_TRUE@@NEED_LIB_TRUE@am__append_7 = src/libout123/modules/output_tinyalsa.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ALSA_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_8 = src/libout123/modules/output_alsa.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_QSA_TRUE@@NEED_LIB_TRUE@am__append_9 = src/libout123/modules/output_qsa.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_COREAUDIO_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_10 = src/libout123/modules/output_coreaudio.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ESD_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_11 = src/libout123/modules/output_esd.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_JACK_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_12 = src/libout123/modules/output_jack.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_NAS_TRUE@@NEED_LIB_TRUE@am__append_13 = src/libout123/modules/output_nas.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OSS_TRUE@@NEED_LIB_TRUE@am__append_14 = src/libout123/modules/output_oss.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_PORTAUDIO_TRUE@@NEED_LIB_TRUE@am__append_15 = src/libout123/modules/output_portaudio.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_PULSE_TRUE@@NEED_LIB_TRUE@am__append_16 = src/libout123/modules/output_pulse.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SDL_TRUE@@NEED_LIB_TRUE@am__append_17 = src/libout123/modules/output_sdl.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SNDIO_TRUE@@NEED_LIB_TRUE@am__append_18 = src/libout123/modules/output_sndio.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SUN_TRUE@@NEED_LIB_TRUE@am__append_19 = src/libout123/modules/output_sun.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_WIN32_TRUE@@NEED_LIB_TRUE@am__append_20 = src/libout123/modules/output_win32.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_WIN32_WASAPI_TRUE@@NEED_LIB_TRUE@am__append_21 = src/libout123/modules/output_win32_wasapi.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_AIX_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_22 = src/libout123/modules/output_aix.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ALIB_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_23 = src/libout123/modules/output_alib.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ARTS_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_24 = src/libout123/modules/output_arts.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_HP_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_25 = src/libout123/modules/output_hp.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OS2_TRUE@@NEED_LIB_TRUE@am__append_26 = src/libout123/modules/output_os2.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SGI_TRUE@@NEED_LIB_TRUE@am__append_27 = src/libout123/modules/output_sgi.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MINT_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_28 = src/libout123/modules/output_mint.la
-@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OPENAL_TRUE@@NEED_LIB_TRUE@am__append_29 = src/libout123/modules/output_openal.la
+@HAVE_DUMMY_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_7 = src/libout123/modules/output_dummy.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_TINYALSA_TRUE@@NEED_LIB_TRUE@am__append_8 = src/libout123/modules/output_tinyalsa.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ALSA_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_9 = src/libout123/modules/output_alsa.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_QSA_TRUE@@NEED_LIB_TRUE@am__append_10 = src/libout123/modules/output_qsa.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_COREAUDIO_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_11 = src/libout123/modules/output_coreaudio.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ESD_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_12 = src/libout123/modules/output_esd.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_JACK_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_13 = src/libout123/modules/output_jack.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_NAS_TRUE@@NEED_LIB_TRUE@am__append_14 = src/libout123/modules/output_nas.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OSS_TRUE@@NEED_LIB_TRUE@am__append_15 = src/libout123/modules/output_oss.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_PORTAUDIO_TRUE@@NEED_LIB_TRUE@am__append_16 = src/libout123/modules/output_portaudio.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_PULSE_TRUE@@NEED_LIB_TRUE@am__append_17 = src/libout123/modules/output_pulse.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SDL_TRUE@@NEED_LIB_TRUE@am__append_18 = src/libout123/modules/output_sdl.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SNDIO_TRUE@@NEED_LIB_TRUE@am__append_19 = src/libout123/modules/output_sndio.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SUN_TRUE@@NEED_LIB_TRUE@am__append_20 = src/libout123/modules/output_sun.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_WIN32_TRUE@@NEED_LIB_TRUE@am__append_21 = src/libout123/modules/output_win32.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_WIN32_WASAPI_TRUE@@NEED_LIB_TRUE@am__append_22 = src/libout123/modules/output_win32_wasapi.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_AIX_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_23 = src/libout123/modules/output_aix.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ALIB_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_24 = src/libout123/modules/output_alib.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_ARTS_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_25 = src/libout123/modules/output_arts.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_HP_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_26 = src/libout123/modules/output_hp.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OS2_TRUE@@NEED_LIB_TRUE@am__append_27 = src/libout123/modules/output_os2.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_SGI_TRUE@@NEED_LIB_TRUE@am__append_28 = src/libout123/modules/output_sgi.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MINT_TRUE@@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_29 = src/libout123/modules/output_mint.la
+@BUILD_LIBOUT123_MODULES_TRUE@@HAVE_MODULES_TRUE@@HAVE_OPENAL_TRUE@@NEED_LIB_TRUE@am__append_30 = src/libout123/modules/output_openal.la
 
 # Optionally containing the one static module to use.
-@BUILD_LIBOUT123_TRUE@@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_30 = src/libout123/modules/libdefaultmodule.la
+@BUILD_LIBOUT123_TRUE@@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_31 = src/libout123/modules/libdefaultmodule.la
 
 # For dynamic modules.
 
 # Just for libdefaultmodule.la.
-@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_31 = src/include/out123.h
-@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_32 = src/libout123/libmodule.la
-@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_33 = src/libout123/libout123.la
-@BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@am__append_34 = \
+@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_32 = src/include/out123.h
+@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_33 = src/libout123/libmodule.la
+@BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_34 = src/libout123/libout123.la
+@BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@am__append_35 = \
 @BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@  src/libout123/buffer.c \
 @BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@  src/libout123/buffer.h \
 @BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@  src/libout123/xfermem.c \
 @BUILD_BUFFER_TRUE@@NEED_LIB_TRUE@  src/libout123/xfermem.h
 
-@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_35 = \
+@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_36 = \
 @HAVE_MODULES_TRUE@@NEED_LIB_TRUE@  src/compat/libcompat_dl.la
 
-@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@am__append_36 = \
+@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@am__append_37 = \
 @HAVE_MODULES_FALSE@@NEED_LIB_TRUE@  src/libout123/modules/libdefaultmodule.la
 
-@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_37 = src/libout123/module.c
-@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@am__append_38 = src/libout123/legacy_module.c
+@HAVE_MODULES_TRUE@@NEED_LIB_TRUE@am__append_38 = src/libout123/module.c
+@HAVE_MODULES_FALSE@@NEED_LIB_TRUE@am__append_39 = src/libout123/legacy_module.c
 
 # The sfifo code is directly used in some modules.
-@NEED_LIB_TRUE@am__append_39 = \
+@NEED_LIB_TRUE@am__append_40 = \
 @NEED_LIB_TRUE@  src/libout123/sfifo.c \
 @NEED_LIB_TRUE@  src/libout123/sfifo.h
 
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_40 =  \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_41 =  \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/testcpu \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/calctables
 
 # Necessary?
 #CLEANFILES += src/libmpg123/*.a
-@BUILD_LIBMPG123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_41 = src/libmpg123/libmpg123.la
-@BUILD_LIBMPG123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_42 = src/include/mpg123.h
+@BUILD_LIBMPG123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_42 = src/libmpg123/libmpg123.la
+@BUILD_LIBMPG123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_43 = src/include/mpg123.h
 
 # All the optional sources leading to objects need to be explicitly
 # handled so that libtool builds the objects in a consistent manner,
@@ -359,105 +363,105 @@ check_PROGRAMS = $(am__EXEEXT_5)
 #NEON64+ACCURATE           synth_neon64_accurate.S synth_stereo_neon64_accurate.S
 #NEON64+!ACCURATE          dct64_neon64.S synth_neon64.S synth_stereo_neon64.S
 #EOT
-@HAVE_LAYER1_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_43 = src/libmpg123/layer1.c
-@HAVE_LAYER2_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_44 = src/libmpg123/layer2.c
-@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_45 = src/libmpg123/layer3.c
-@HAVE_EQUALIZER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_46 = src/libmpg123/equalizer.c
-@HAVE_DITHER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_47 = src/libmpg123/dither.c
-@HAVE_SYNTH8_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_48 = src/libmpg123/synth_8bit.c
-@HAVE_SYNTH16_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_49 = src/libmpg123/synth.c
-@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_50 = src/libmpg123/synth_s32.c
-@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_51 = src/libmpg123/synth_real.c
-@HAVE_LFS_WRAP_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_52 = src/libmpg123/lfs_wrap.c
-@HAVE_ICY_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_53 = src/libmpg123/icy.c src/libmpg123/icy2utf8.c
-@HAVE_FEATURE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_54 = src/libmpg123/feature.c
-@HAVE_NTOM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_55 = src/libmpg123/ntom.c
-@HAVE_STRING_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_56 = src/libmpg123/stringbuf.c
-@HAVE_GETCPUFLAGS_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_57 = src/libmpg123/getcpuflags.S
-@HAVE_GETCPUFLAGS_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_58 = src/libmpg123/getcpuflags_x86_64.S
-@HAVE_GETCPUFLAGS_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_59 = src/libmpg123/getcpuflags_arm.c src/libmpg123/check_neon.S
-@HAVE_ALTIVEC_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_60 = src/libmpg123/synth_altivec.c src/libmpg123/dct64_altivec.c
-@HAVE_I386_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_61 = src/libmpg123/dct64_i386.c
-@HAVE_I486_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_62 = src/libmpg123/synth_i486.c src/libmpg123/dct64_i486.c
-@HAVE_I586_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_63 = src/libmpg123/synth_i586.S
-@HAVE_I586_DITHER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_64 = src/libmpg123/synth_i586_dither.S
-@HAVE_3DNOW_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_65 = src/libmpg123/synth_3dnow.S src/libmpg123/dct64_3dnow.S
-@HAVE_3DNOW_TRUE@@HAVE_EQUALIZER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_66 = src/libmpg123/equalizer_3dnow.S
-@HAVE_3DNOW_VINTAGE_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_67 = src/libmpg123/dct36_3dnow.S
-@HAVE_3DNOWEXT_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_68 = src/libmpg123/dct64_3dnowext.S src/libmpg123/synth_3dnowext.S
-@HAVE_3DNOWEXT_VINTAGE_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_69 = src/libmpg123/dct36_3dnowext.S
-@HAVE_MMXTAB_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_70 = src/libmpg123/tabinit_mmx.S
-@HAVE_MMX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_71 = src/libmpg123/dct64_mmx.S src/libmpg123/synth_mmx.S
-@HAVE_FLOATDCT_TRUE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_72 = src/libmpg123/dct64_sse_float.S
-@HAVE_SSE_VINTAGE_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_73 = src/libmpg123/synth_sse_float.S src/libmpg123/synth_stereo_sse_float.S
-@HAVE_SSE_VINTAGE_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_74 = src/libmpg123/synth_sse_s32.S src/libmpg123/synth_stereo_sse_s32.S
-@HAVE_LAYER3_TRUE@@HAVE_SSE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_75 = src/libmpg123/dct36_sse.S
-@HAVE_ACCURATE_TRUE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_76 = src/libmpg123/synth_sse_accurate.S src/libmpg123/synth_stereo_sse_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_77 = src/libmpg123/dct64_sse.S src/libmpg123/synth_sse.S
-@HAVE_LAYER3_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_78 = src/libmpg123/dct36_x86_64.S
-@HAVE_SYNTHREAL_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_79 = src/libmpg123/synth_stereo_x86_64_float.S
-@HAVE_SYNTH32_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_80 = src/libmpg123/synth_stereo_x86_64_s32.S
-@HAVE_ACCURATE_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_81 = src/libmpg123/synth_stereo_x86_64_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_82 = src/libmpg123/dct64_x86_64.S src/libmpg123/synth_stereo_x86_64.S
-@HAVE_FLOATDCT_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_83 = src/libmpg123/dct64_x86_64_float.S
-@HAVE_SYNTHREAL_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_84 = src/libmpg123/synth_x86_64_float.S
-@HAVE_SYNTH32_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_85 = src/libmpg123/synth_x86_64_s32.S
-@HAVE_ACCURATE_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_86 = src/libmpg123/synth_x86_64_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_87 = src/libmpg123/synth_x86_64.S
-@HAVE_AVX_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_88 = src/libmpg123/dct36_avx.S
-@HAVE_AVX_TRUE@@HAVE_FLOATDCT_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_89 = src/libmpg123/dct64_avx_float.S
-@HAVE_AVX_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_90 = src/libmpg123/synth_stereo_avx_float.S
-@HAVE_AVX_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_91 = src/libmpg123/synth_stereo_avx_s32.S
-@HAVE_ACCURATE_TRUE@@HAVE_AVX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_92 = src/libmpg123/synth_stereo_avx_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_AVX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_93 = src/libmpg123/dct64_avx.S src/libmpg123/synth_stereo_avx.S
-@HAVE_ACCURATE_TRUE@@HAVE_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_94 = src/libmpg123/synth_arm_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_95 = src/libmpg123/synth_arm.S
-@HAVE_LAYER3_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_96 = src/libmpg123/dct36_neon.S
-@HAVE_FLOATDCT_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_97 = src/libmpg123/dct64_neon_float.S
-@HAVE_NEON_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_98 = src/libmpg123/synth_neon_float.S src/libmpg123/synth_stereo_neon_float.S
-@HAVE_NEON_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_99 = src/libmpg123/synth_neon_s32.S src/libmpg123/synth_stereo_neon_s32.S
-@HAVE_ACCURATE_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_100 = src/libmpg123/synth_neon_accurate.S src/libmpg123/synth_stereo_neon_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_101 = src/libmpg123/dct64_neon.S src/libmpg123/synth_neon.S src/libmpg123/synth_stereo_neon.S
-@HAVE_LAYER3_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_102 = src/libmpg123/dct36_neon64.S
-@HAVE_FLOATDCT_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_103 = src/libmpg123/dct64_neon64_float.S
-@HAVE_NEON64_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_104 = src/libmpg123/synth_neon64_float.S src/libmpg123/synth_stereo_neon64_float.S
-@HAVE_NEON64_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_105 = src/libmpg123/synth_neon64_s32.S src/libmpg123/synth_stereo_neon64_s32.S
-@HAVE_ACCURATE_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_106 = src/libmpg123/synth_neon64_accurate.S src/libmpg123/synth_stereo_neon64_accurate.S
-@HAVE_ACCURATE_FALSE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_107 = src/libmpg123/dct64_neon64.S src/libmpg123/synth_neon64.S src/libmpg123/synth_stereo_neon64.S
-@BUILD_LIBSYN123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_108 = src/include/syn123.h
-@BUILD_LIBSYN123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_109 = src/libsyn123/libsyn123.la
-@BUILD_PROGRAMS_TRUE@am__append_110 = src/out123
-@BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@am__append_111 = \
+@HAVE_LAYER1_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_44 = src/libmpg123/layer1.c
+@HAVE_LAYER2_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_45 = src/libmpg123/layer2.c
+@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_46 = src/libmpg123/layer3.c
+@HAVE_EQUALIZER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_47 = src/libmpg123/equalizer.c
+@HAVE_DITHER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_48 = src/libmpg123/dither.c
+@HAVE_SYNTH8_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_49 = src/libmpg123/synth_8bit.c
+@HAVE_SYNTH16_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_50 = src/libmpg123/synth.c
+@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_51 = src/libmpg123/synth_s32.c
+@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_52 = src/libmpg123/synth_real.c
+@HAVE_LFS_WRAP_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_53 = src/libmpg123/lfs_wrap.c
+@HAVE_ICY_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_54 = src/libmpg123/icy.c src/libmpg123/icy2utf8.c
+@HAVE_FEATURE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_55 = src/libmpg123/feature.c
+@HAVE_NTOM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_56 = src/libmpg123/ntom.c
+@HAVE_STRING_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_57 = src/libmpg123/stringbuf.c
+@HAVE_GETCPUFLAGS_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_58 = src/libmpg123/getcpuflags.S
+@HAVE_GETCPUFLAGS_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_59 = src/libmpg123/getcpuflags_x86_64.S
+@HAVE_GETCPUFLAGS_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_60 = src/libmpg123/getcpuflags_arm.c src/libmpg123/check_neon.S
+@HAVE_ALTIVEC_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_61 = src/libmpg123/synth_altivec.c src/libmpg123/dct64_altivec.c
+@HAVE_I386_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_62 = src/libmpg123/dct64_i386.c
+@HAVE_I486_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_63 = src/libmpg123/synth_i486.c src/libmpg123/dct64_i486.c
+@HAVE_I586_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_64 = src/libmpg123/synth_i586.S
+@HAVE_I586_DITHER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_65 = src/libmpg123/synth_i586_dither.S
+@HAVE_3DNOW_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_66 = src/libmpg123/synth_3dnow.S src/libmpg123/dct64_3dnow.S
+@HAVE_3DNOW_TRUE@@HAVE_EQUALIZER_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_67 = src/libmpg123/equalizer_3dnow.S
+@HAVE_3DNOW_VINTAGE_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_68 = src/libmpg123/dct36_3dnow.S
+@HAVE_3DNOWEXT_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_69 = src/libmpg123/dct64_3dnowext.S src/libmpg123/synth_3dnowext.S
+@HAVE_3DNOWEXT_VINTAGE_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_70 = src/libmpg123/dct36_3dnowext.S
+@HAVE_MMXTAB_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_71 = src/libmpg123/tabinit_mmx.S
+@HAVE_MMX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_72 = src/libmpg123/dct64_mmx.S src/libmpg123/synth_mmx.S
+@HAVE_FLOATDCT_TRUE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_73 = src/libmpg123/dct64_sse_float.S
+@HAVE_SSE_VINTAGE_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_74 = src/libmpg123/synth_sse_float.S src/libmpg123/synth_stereo_sse_float.S
+@HAVE_SSE_VINTAGE_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_75 = src/libmpg123/synth_sse_s32.S src/libmpg123/synth_stereo_sse_s32.S
+@HAVE_LAYER3_TRUE@@HAVE_SSE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_76 = src/libmpg123/dct36_sse.S
+@HAVE_ACCURATE_TRUE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_77 = src/libmpg123/synth_sse_accurate.S src/libmpg123/synth_stereo_sse_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_SSE_VINTAGE_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_78 = src/libmpg123/dct64_sse.S src/libmpg123/synth_sse.S
+@HAVE_LAYER3_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_79 = src/libmpg123/dct36_x86_64.S
+@HAVE_SYNTHREAL_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_80 = src/libmpg123/synth_stereo_x86_64_float.S
+@HAVE_SYNTH32_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_81 = src/libmpg123/synth_stereo_x86_64_s32.S
+@HAVE_ACCURATE_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_82 = src/libmpg123/synth_stereo_x86_64_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_83 = src/libmpg123/dct64_x86_64.S src/libmpg123/synth_stereo_x86_64.S
+@HAVE_FLOATDCT_TRUE@@HAVE_X86_64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_84 = src/libmpg123/dct64_x86_64_float.S
+@HAVE_SYNTHREAL_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_85 = src/libmpg123/synth_x86_64_float.S
+@HAVE_SYNTH32_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_86 = src/libmpg123/synth_x86_64_s32.S
+@HAVE_ACCURATE_TRUE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_87 = src/libmpg123/synth_x86_64_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_X86_64_MONO_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_88 = src/libmpg123/synth_x86_64.S
+@HAVE_AVX_TRUE@@HAVE_LAYER3_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_89 = src/libmpg123/dct36_avx.S
+@HAVE_AVX_TRUE@@HAVE_FLOATDCT_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_90 = src/libmpg123/dct64_avx_float.S
+@HAVE_AVX_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_91 = src/libmpg123/synth_stereo_avx_float.S
+@HAVE_AVX_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_92 = src/libmpg123/synth_stereo_avx_s32.S
+@HAVE_ACCURATE_TRUE@@HAVE_AVX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_93 = src/libmpg123/synth_stereo_avx_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_AVX_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_94 = src/libmpg123/dct64_avx.S src/libmpg123/synth_stereo_avx.S
+@HAVE_ACCURATE_TRUE@@HAVE_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_95 = src/libmpg123/synth_arm_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_ARM_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_96 = src/libmpg123/synth_arm.S
+@HAVE_LAYER3_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_97 = src/libmpg123/dct36_neon.S
+@HAVE_FLOATDCT_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_98 = src/libmpg123/dct64_neon_float.S
+@HAVE_NEON_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_99 = src/libmpg123/synth_neon_float.S src/libmpg123/synth_stereo_neon_float.S
+@HAVE_NEON_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_100 = src/libmpg123/synth_neon_s32.S src/libmpg123/synth_stereo_neon_s32.S
+@HAVE_ACCURATE_TRUE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_101 = src/libmpg123/synth_neon_accurate.S src/libmpg123/synth_stereo_neon_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_NEON_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_102 = src/libmpg123/dct64_neon.S src/libmpg123/synth_neon.S src/libmpg123/synth_stereo_neon.S
+@HAVE_LAYER3_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_103 = src/libmpg123/dct36_neon64.S
+@HAVE_FLOATDCT_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_104 = src/libmpg123/dct64_neon64_float.S
+@HAVE_NEON64_TRUE@@HAVE_SYNTHREAL_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_105 = src/libmpg123/synth_neon64_float.S src/libmpg123/synth_stereo_neon64_float.S
+@HAVE_NEON64_TRUE@@HAVE_SYNTH32_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_106 = src/libmpg123/synth_neon64_s32.S src/libmpg123/synth_stereo_neon64_s32.S
+@HAVE_ACCURATE_TRUE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_107 = src/libmpg123/synth_neon64_accurate.S src/libmpg123/synth_stereo_neon64_accurate.S
+@HAVE_ACCURATE_FALSE@@HAVE_NEON64_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_108 = src/libmpg123/dct64_neon64.S src/libmpg123/synth_neon64.S src/libmpg123/synth_stereo_neon64.S
+@BUILD_LIBSYN123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_109 = src/include/syn123.h
+@BUILD_LIBSYN123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am__append_110 = src/libsyn123/libsyn123.la
+@BUILD_PROGRAMS_TRUE@am__append_111 = src/out123
+@BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@am__append_112 = \
 @BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@  src/mpg123 \
 @BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@  src/mpg123-id3dump \
 @BUILD_PROGRAMS_TRUE@@HAVE_LFS_WRAP_TRUE@  src/mpg123-strip
 
-@TERM_POSIX_TRUE@am__append_112 = src/term_posix.c
-@TERM_WIN32_TRUE@am__append_113 = src/term_win32.c
-@TERM_NONE_TRUE@am__append_114 = src/term_none.c
-@NET123_TRUE@am__append_115 = src/net123.h
-@NET123_EXEC_TRUE@am__append_116 = src/net123_exec.c
-@NET123_WINHTTP_TRUE@am__append_117 = src/net123_winhttp.c
-@NET123_WINHTTP_TRUE@am__append_118 = -lwinhttp
-@NET123_WININET_TRUE@am__append_119 = src/net123_wininet.c
-@NET123_WININET_TRUE@am__append_120 = -lwininet
-@WIN32_CODES_TRUE@am__append_121 = \
+@TERM_POSIX_TRUE@am__append_113 = src/term_posix.c
+@TERM_WIN32_TRUE@am__append_114 = src/term_win32.c
+@TERM_NONE_TRUE@am__append_115 = src/term_none.c
+@NET123_TRUE@am__append_116 = src/net123.h
+@NET123_EXEC_TRUE@am__append_117 = src/net123_exec.c
+@NET123_WINHTTP_TRUE@am__append_118 = src/net123_winhttp.c
+@NET123_WINHTTP_TRUE@am__append_119 = -lwinhttp
+@NET123_WININET_TRUE@am__append_120 = src/net123_wininet.c
+@NET123_WININET_TRUE@am__append_121 = -lwininet
+@WIN32_CODES_TRUE@am__append_122 = \
 @WIN32_CODES_TRUE@  src/win32_support.c
 
-@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_122 = src/win32_net.c
-@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_123 = -lws2_32
-@WIN32_CODES_TRUE@am__append_124 = \
-@WIN32_CODES_TRUE@  src/win32_support.c
-
+@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_123 = src/win32_net.c
+@NETWORK_WINSOCK_TRUE@@WIN32_CODES_TRUE@am__append_124 = -lws2_32
 @WIN32_CODES_TRUE@am__append_125 = \
+@WIN32_CODES_TRUE@  src/win32_support.c
+
+@WIN32_CODES_TRUE@am__append_126 = \
 @WIN32_CODES_TRUE@  src/win32_support.c
 
 
 # Pkg-config files and library includes.
-@BUILD_LIBMPG123_TRUE@@NEED_MAINLIB_TRUE@am__append_126 = libmpg123.pc
-@BUILD_LIBOUT123_TRUE@@NEED_MAINLIB_TRUE@am__append_127 = libout123.pc
-@BUILD_LIBSYN123_TRUE@@NEED_MAINLIB_TRUE@am__append_128 = libsyn123.pc
-@BUILD_PROGRAMS_TRUE@am__append_129 = man1/mpg123.1 man1/out123.1
+@BUILD_LIBMPG123_TRUE@@NEED_MAINLIB_TRUE@am__append_127 = libmpg123.pc
+@BUILD_LIBOUT123_TRUE@@NEED_MAINLIB_TRUE@am__append_128 = libout123.pc
+@BUILD_LIBSYN123_TRUE@@NEED_MAINLIB_TRUE@am__append_129 = libsyn123.pc
+@BUILD_PROGRAMS_TRUE@am__append_130 = man1/mpg123.1 man1/out123.1
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -496,10 +500,12 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libdir)" \
 @BUILD_LIBMPG123_TRUE@am__EXEEXT_5 = src/tests/decode_fixed$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/seek_whence$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/seek_accuracy$(EXEEXT) \
-@BUILD_LIBMPG123_TRUE@	src/tests/resample_total$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/text$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/textprint$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/plain_id3$(EXEEXT)
+@BUILD_LIBSYN123_TRUE@am__EXEEXT_6 =  \
+@BUILD_LIBSYN123_TRUE@	src/tests/resample_total$(EXEEXT) \
+@BUILD_LIBSYN123_TRUE@	src/tests/resample_buffer$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -818,8 +824,8 @@ src_libout123_libmodule_la_OBJECTS =  \
 @BUILD_LIBOUT123_TRUE@@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@am_src_libout123_libmodule_la_rpath =
 @NEED_LIB_TRUE@src_libout123_libout123_la_DEPENDENCIES =  \
 @NEED_LIB_TRUE@	src/libout123/libmodule.la \
-@NEED_LIB_TRUE@	src/compat/libcompat.la $(am__append_35) \
-@NEED_LIB_TRUE@	$(am__append_36)
+@NEED_LIB_TRUE@	src/compat/libcompat.la $(am__append_36) \
+@NEED_LIB_TRUE@	$(am__append_37)
 am__src_libout123_libout123_la_SOURCES_DIST =  \
 	src/libout123/libout123.c src/libout123/stringlists.h \
 	src/libout123/stringlists.c src/libout123/out123_int.h \
@@ -1311,6 +1317,11 @@ am_src_tests_plain_id3_OBJECTS = src/tests/plain_id3.$(OBJEXT)
 src_tests_plain_id3_OBJECTS = $(am_src_tests_plain_id3_OBJECTS)
 src_tests_plain_id3_DEPENDENCIES = src/compat/libcompat.la \
 	$(LIBMPG123)
+am_src_tests_resample_buffer_OBJECTS =  \
+	src/tests/resample_buffer.$(OBJEXT)
+src_tests_resample_buffer_OBJECTS =  \
+	$(am_src_tests_resample_buffer_OBJECTS)
+src_tests_resample_buffer_DEPENDENCIES = $(LIBSYN123)
 am_src_tests_resample_total_OBJECTS =  \
 	src/tests/resample_total.$(OBJEXT)
 src_tests_resample_total_OBJECTS =  \
@@ -1538,6 +1549,7 @@ am__depfiles_remade = src/$(DEPDIR)/audio.Po src/$(DEPDIR)/common.Po \
 	src/libsyn123/$(DEPDIR)/libsyn123_la-volume.Plo \
 	src/tests/$(DEPDIR)/decode_fixed.Po \
 	src/tests/$(DEPDIR)/noise.Po src/tests/$(DEPDIR)/plain_id3.Po \
+	src/tests/$(DEPDIR)/resample_buffer.Po \
 	src/tests/$(DEPDIR)/resample_total.Po \
 	src/tests/$(DEPDIR)/seek_accuracy.Po \
 	src/tests/$(DEPDIR)/seek_whence.Po \
@@ -1610,6 +1622,7 @@ SOURCES = $(src_compat_libcompat_la_SOURCES) \
 	$(src_mpg123_id3dump_SOURCES) $(src_mpg123_strip_SOURCES) \
 	$(src_out123_SOURCES) $(src_tests_decode_fixed_SOURCES) \
 	$(src_tests_noise_SOURCES) $(src_tests_plain_id3_SOURCES) \
+	$(src_tests_resample_buffer_SOURCES) \
 	$(src_tests_resample_total_SOURCES) \
 	$(src_tests_seek_accuracy_SOURCES) \
 	$(src_tests_seek_whence_SOURCES) $(src_tests_sweeper_SOURCES) \
@@ -1655,6 +1668,7 @@ DIST_SOURCES = $(src_compat_libcompat_la_SOURCES) \
 	$(src_mpg123_strip_SOURCES) $(am__src_out123_SOURCES_DIST) \
 	$(src_tests_decode_fixed_SOURCES) $(src_tests_noise_SOURCES) \
 	$(src_tests_plain_id3_SOURCES) \
+	$(src_tests_resample_buffer_SOURCES) \
 	$(src_tests_resample_total_SOURCES) \
 	$(src_tests_seek_accuracy_SOURCES) \
 	$(src_tests_seek_whence_SOURCES) $(src_tests_sweeper_SOURCES) \
@@ -1847,8 +1861,9 @@ am__set_TESTS_bases = \
   bases=`echo $$bases`
 AM_TESTSUITE_SUMMARY_HEADER = ' for $(PACKAGE_STRING)'
 RECHECK_LOGS = $(TEST_LOGS)
-@BUILD_LIBMPG123_TRUE@am__EXEEXT_6 = src/tests/seek_whence.sh \
+@BUILD_LIBMPG123_TRUE@am__EXEEXT_7 = src/tests/seek_whence.sh \
 @BUILD_LIBMPG123_TRUE@	src/tests/seek_accuracy.sh \
+@BUILD_LIBMPG123_TRUE@	src/tests/resample_buffer$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/resample_total$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/text$(EXEEXT) \
 @BUILD_LIBMPG123_TRUE@	src/tests/textprint$(EXEEXT) \
@@ -2140,7 +2155,7 @@ EXTRA_DIST = src/tests/testtext.sh src/tests/decode_fixed.sh \
 	src/tests/plain_id3.sh src/tests/plain_id3.txt \
 	src/tests/sweep.mp3 src/common/abi_align.h src/common/debug.h \
 	src/common/sample.h src/common/swap_bytes_impl.h \
-	src/common/true.h $(am__append_39) src/version.h \
+	src/common/true.h $(am__append_40) src/version.h \
 	src/mpg123-with-modules src/out123-with-modules \
 	doc/BENCHMARKING doc/BUGS doc/CONTACT doc/PATENTS \
 	doc/README.3DNOW doc/README.gain doc/README.remote \
@@ -2173,34 +2188,34 @@ EXTRA_DIST = src/tests/testtext.sh src/tests/decode_fixed.sh \
 	ports/cmake/src/compat/CMakeLists.txt ports/README \
 	scripts/benchmark-cpu.pl scripts/tag_lyrics.py scripts/conplay \
 	scripts/mpg123info
-@NEED_LIB_TRUE@pkglib_LTLIBRARIES = $(am__append_6) $(am__append_7) \
-@NEED_LIB_TRUE@	$(am__append_8) $(am__append_9) \
-@NEED_LIB_TRUE@	$(am__append_10) $(am__append_11) \
-@NEED_LIB_TRUE@	$(am__append_12) $(am__append_13) \
-@NEED_LIB_TRUE@	$(am__append_14) $(am__append_15) \
-@NEED_LIB_TRUE@	$(am__append_16) $(am__append_17) \
-@NEED_LIB_TRUE@	$(am__append_18) $(am__append_19) \
-@NEED_LIB_TRUE@	$(am__append_20) $(am__append_21) \
-@NEED_LIB_TRUE@	$(am__append_22) $(am__append_23) \
-@NEED_LIB_TRUE@	$(am__append_24) $(am__append_25) \
-@NEED_LIB_TRUE@	$(am__append_26) $(am__append_27) \
-@NEED_LIB_TRUE@	$(am__append_28) $(am__append_29)
-@NEED_LIB_TRUE@lib_LTLIBRARIES = $(am__append_33) $(am__append_41) \
-@NEED_LIB_TRUE@	$(am__append_109)
+@NEED_LIB_TRUE@pkglib_LTLIBRARIES = $(am__append_7) $(am__append_8) \
+@NEED_LIB_TRUE@	$(am__append_9) $(am__append_10) \
+@NEED_LIB_TRUE@	$(am__append_11) $(am__append_12) \
+@NEED_LIB_TRUE@	$(am__append_13) $(am__append_14) \
+@NEED_LIB_TRUE@	$(am__append_15) $(am__append_16) \
+@NEED_LIB_TRUE@	$(am__append_17) $(am__append_18) \
+@NEED_LIB_TRUE@	$(am__append_19) $(am__append_20) \
+@NEED_LIB_TRUE@	$(am__append_21) $(am__append_22) \
+@NEED_LIB_TRUE@	$(am__append_23) $(am__append_24) \
+@NEED_LIB_TRUE@	$(am__append_25) $(am__append_26) \
+@NEED_LIB_TRUE@	$(am__append_27) $(am__append_28) \
+@NEED_LIB_TRUE@	$(am__append_29) $(am__append_30)
+@NEED_LIB_TRUE@lib_LTLIBRARIES = $(am__append_34) $(am__append_42) \
+@NEED_LIB_TRUE@	$(am__append_110)
 noinst_LIBRARIES = 
 noinst_LTLIBRARIES = src/compat/libcompat.la \
 	src/compat/libcompat_str.la src/compat/libcompat_dl.la \
-	$(am__append_30) $(am__append_32)
+	$(am__append_31) $(am__append_33)
 nodist_include_HEADERS = 
 
 # All main libraries need fmt123 header installed.
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@include_HEADERS = $(am__append_31) \
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_42) \
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_108) \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@include_HEADERS = $(am__append_32) \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_43) \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_109) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/include/fmt123.h
 # Attempts to wrap that in NEED_MAN failed. So just live with the
 # empty directory.
-dist_man_MANS = $(am__append_129)
+dist_man_MANS = $(am__append_130)
 CLEANFILES = src/*.a
 XFAIL_TESTS = $(am__append_3)
 
@@ -2255,8 +2270,15 @@ src_tests_sweeper_SOURCES = \
 
 src_tests_sweeper_LDADD = \
   src/compat/libcompat.la \
+  @LIBM@ \
   $(LIBSYN123) \
   $(LIBOUT123)
+
+src_tests_resample_buffer_SOURCES = \
+  src/tests/resample_buffer.c
+
+src_tests_resample_buffer_LDADD = \
+  $(LIBSYN123)
 
 src_tests_resample_total_SOURCES = \
   src/tests/resample_total.c
@@ -2894,7 +2916,7 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@	src/libout123/out123_int.h src/libout123/wav.c \
 @NEED_LIB_TRUE@	src/libout123/wav.h src/libout123/hextxt.c \
 @NEED_LIB_TRUE@	src/libout123/hextxt.h src/libout123/wavhead.h \
-@NEED_LIB_TRUE@	$(am__append_34)
+@NEED_LIB_TRUE@	$(am__append_35)
 @NEED_LIB_TRUE@src_libout123_libout123_la_CFLAGS = @LIB_CFLAGS@
 @NEED_LIB_TRUE@src_libout123_libout123_la_LDFLAGS = \
 @NEED_LIB_TRUE@  -no-undefined -version-info @LIBOUT123_VERSION@ -export-symbols-regex '^out123_'
@@ -2902,10 +2924,10 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@src_libout123_libout123_la_LIBADD =  \
 @NEED_LIB_TRUE@	src/libout123/libmodule.la \
 @NEED_LIB_TRUE@	src/compat/libcompat.la @LIBOUT123_LIBS@ \
-@NEED_LIB_TRUE@	$(am__append_35) $(am__append_36)
+@NEED_LIB_TRUE@	$(am__append_36) $(am__append_37)
 @NEED_LIB_TRUE@src_libout123_libmodule_la_SOURCES =  \
-@NEED_LIB_TRUE@	src/libout123/module.h $(am__append_37) \
-@NEED_LIB_TRUE@	$(am__append_38)
+@NEED_LIB_TRUE@	src/libout123/module.h $(am__append_38) \
+@NEED_LIB_TRUE@	$(am__append_39)
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@src_libmpg123_testcpu_DEPENDENCIES = src/libmpg123/getcpuflags.$(OBJEXT)
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@src_libmpg123_testcpu_SOURCES = src/libmpg123/testcpu.c
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@src_libmpg123_testcpu_LDADD = \
@@ -2968,7 +2990,6 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/getcpuflags.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/index.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	src/libmpg123/index.c \
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_43) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_44) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_45) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_46) \
@@ -3032,7 +3053,8 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_104) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_105) \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_106) \
-@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_107)
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_107) \
+@NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@	$(am__append_108)
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@EXTRA_src_libmpg123_libmpg123_la_SOURCES = \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@  src/libmpg123/l2tables.h \
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@  src/libmpg123/l12tabs.h \
@@ -3080,8 +3102,8 @@ src_compat_libcompat_dl_la_LIBADD = @LIBDL@
 @NEED_LIB_TRUE@@NEED_MAINLIB_TRUE@  src/libsyn123/sampleconv.c
 
 src_mpg123_LDADD = src/compat/libcompat.la $(LIBMPG123) $(LIBOUT123) \
-	$(LIBSYN123) @PROG_LIBS@ $(am__append_118) $(am__append_120) \
-	$(am__append_123)
+	$(LIBSYN123) @PROG_LIBS@ $(am__append_119) $(am__append_121) \
+	$(am__append_124)
 src_mpg123_LDFLAGS = @EXEC_LT_LDFLAGS@
 src_out123_LDADD = \
   src/compat/libcompat.la \
@@ -3110,26 +3132,26 @@ src_mpg123_SOURCES = src/audio.c src/audio.h src/common.c src/common.h \
 	src/metaprint.c src/metaprint.h src/local.h src/local.c \
 	src/playlist.c src/playlist.h src/streamdump.h \
 	src/streamdump.c src/term.c src/term.h src/terms.h \
-	src/win32_support.h $(am__append_112) $(am__append_113) \
-	$(am__append_114) $(am__append_115) $(am__append_116) \
-	$(am__append_117) $(am__append_119) $(am__append_121) \
-	$(am__append_122)
+	src/win32_support.h $(am__append_113) $(am__append_114) \
+	$(am__append_115) $(am__append_116) $(am__append_117) \
+	$(am__append_118) $(am__append_120) $(am__append_122) \
+	$(am__append_123)
 
 # Replace common.h by sysutil.h!
 src_out123_SOURCES = src/sysutil.c src/sysutil.h src/common.h \
 	src/getlopt.c src/getlopt.h src/local.h src/local.c \
 	src/filters.h src/filters.c src/out123.c src/mpg123app.h \
-	src/win32_support.h $(am__append_124)
+	src/win32_support.h $(am__append_125)
 src_mpg123_id3dump_SOURCES = src/mpg123-id3dump.c src/getlopt.c \
-	src/getlopt.h $(am__append_125)
+	src/getlopt.h $(am__append_126)
 src_mpg123_strip_SOURCES = \
   src/mpg123-strip.c \
   src/getlopt.c \
   src/getlopt.h
 
 @NEED_MAINLIB_TRUE@pkgconfigdir = $(libdir)/pkgconfig
-@NEED_MAINLIB_TRUE@pkgconfig_DATA = $(am__append_126) \
-@NEED_MAINLIB_TRUE@	$(am__append_127) $(am__append_128)
+@NEED_MAINLIB_TRUE@pkgconfig_DATA = $(am__append_127) \
+@NEED_MAINLIB_TRUE@	$(am__append_128) $(am__append_129)
 all: all-am
 
 .SUFFIXES:
@@ -3972,6 +3994,12 @@ src/tests/plain_id3.$(OBJEXT): src/tests/$(am__dirstamp) \
 src/tests/plain_id3$(EXEEXT): $(src_tests_plain_id3_OBJECTS) $(src_tests_plain_id3_DEPENDENCIES) $(EXTRA_src_tests_plain_id3_DEPENDENCIES) src/tests/$(am__dirstamp)
 	@rm -f src/tests/plain_id3$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(src_tests_plain_id3_OBJECTS) $(src_tests_plain_id3_LDADD) $(LIBS)
+src/tests/resample_buffer.$(OBJEXT): src/tests/$(am__dirstamp) \
+	src/tests/$(DEPDIR)/$(am__dirstamp)
+
+src/tests/resample_buffer$(EXEEXT): $(src_tests_resample_buffer_OBJECTS) $(src_tests_resample_buffer_DEPENDENCIES) $(EXTRA_src_tests_resample_buffer_DEPENDENCIES) src/tests/$(am__dirstamp)
+	@rm -f src/tests/resample_buffer$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(src_tests_resample_buffer_OBJECTS) $(src_tests_resample_buffer_LDADD) $(LIBS)
 src/tests/resample_total.$(OBJEXT): src/tests/$(am__dirstamp) \
 	src/tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -4229,6 +4257,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/decode_fixed.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/noise.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/plain_id3.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/resample_buffer.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/resample_total.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/seek_accuracy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/seek_whence.Po@am__quote@ # am--include-marker
@@ -5278,6 +5307,13 @@ src/tests/seek_accuracy.sh.log: src/tests/seek_accuracy.sh
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+src/tests/resample_buffer.log: src/tests/resample_buffer$(EXEEXT)
+	@p='src/tests/resample_buffer$(EXEEXT)'; \
+	b='src/tests/resample_buffer'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 src/tests/resample_total.log: src/tests/resample_total$(EXEEXT)
 	@p='src/tests/resample_total$(EXEEXT)'; \
 	b='src/tests/resample_total'; \
@@ -5769,6 +5805,7 @@ distclean: distclean-am
 	-rm -f src/tests/$(DEPDIR)/decode_fixed.Po
 	-rm -f src/tests/$(DEPDIR)/noise.Po
 	-rm -f src/tests/$(DEPDIR)/plain_id3.Po
+	-rm -f src/tests/$(DEPDIR)/resample_buffer.Po
 	-rm -f src/tests/$(DEPDIR)/resample_total.Po
 	-rm -f src/tests/$(DEPDIR)/seek_accuracy.Po
 	-rm -f src/tests/$(DEPDIR)/seek_whence.Po
@@ -6022,6 +6059,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/tests/$(DEPDIR)/decode_fixed.Po
 	-rm -f src/tests/$(DEPDIR)/noise.Po
 	-rm -f src/tests/$(DEPDIR)/plain_id3.Po
+	-rm -f src/tests/$(DEPDIR)/resample_buffer.Po
 	-rm -f src/tests/$(DEPDIR)/resample_total.Po
 	-rm -f src/tests/$(DEPDIR)/seek_accuracy.Po
 	-rm -f src/tests/$(DEPDIR)/seek_whence.Po
